@@ -1,0 +1,7 @@
++-----------------------------------+
+|           CONGRATULATIONS         |
+|   You got into the HighScores!    |
+|                                   |
+|  PLAYER NAME:                     |
+|                                   |
++-----------------------------------+
