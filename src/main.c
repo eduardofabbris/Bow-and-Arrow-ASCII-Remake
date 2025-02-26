@@ -6,7 +6,7 @@
 
 //Keys
 #define SPACE 32 //32 = space in ascii
-#define ESC 27 //27 = esc in ascci
+#define ESC 27   //27 = esc in ascci
 
 // Special Use
 #define DEBUG_MODE 0
@@ -73,7 +73,6 @@
 #define H_MONSTER_SPAWN_DELAY 1500 //ms
 
 /**********CANVAS**********/
-//#define CANVAS_SKIN_FILE "backgrounds\\game"
 #define CANVAS_SKIN_FILE "backgrounds" FILE_SEPARATOR "game"
 #define CANVAS_COLUMNS 81
 #define CANVAS_ROWS 35
@@ -84,14 +83,12 @@
 #define CANVAS_MIDDLE_EDGE_X 4
 
 /**********ARROW**********/
-//#define ARROW_SKIN_FILE "skins\\arrow_skin"
 #define ARROW_SKIN_FILE "skins" FILE_SEPARATOR "arrow_skin"
 #define ARROW_COLUMNS 3
 #define ARROW_ROWS 1
 #define ARROW_RIGHT_LIMIT 77
 
 /**********ARCHER**********/
-//#define ARCHER_SKIN_FILE "skins\\archer_skin"
 #define ARCHER_SKIN_FILE "skins" FILE_SEPARATOR "archer_skin"
 #define ARCHER_INITIAL_X 15
 #define ARCHER_INITIAL_Y 1
@@ -101,7 +98,6 @@
 #define ARCHER_ROWS 4
 
 /**********BALLOON**********/
-//#define BALLOON_SKIN_FILE "skins\\balloon_skin"
 #define BALLOON_SKIN_FILE "skins" FILE_SEPARATOR "balloon_skin"
 #define BALLOON_COLUMNS 3
 #define BALLOON_ROWS 3
@@ -111,7 +107,6 @@
 #define BALLOON_ROW_INITIAL_Y 18
 
 /**********MONSTER**********/
-//#define MONSTER_SKIN_FILE "skins\\monster_skin"
 #define MONSTER_SKIN_FILE "skins" FILE_SEPARATOR "monster_skin"
 #define MONSTER_COLUMNS 6
 #define MONSTER_ROWS 5
@@ -123,8 +118,6 @@
 
 /**********ARROW_LEFT_DISPLAY**********/
 #define ARROW__LEFT_DISPLAY_X 3
-//TODO
-//#define ARROW__LEFT_DISPLAY_SYMBOL 25 //alt code
 #define ARROW__LEFT_DISPLAY_SYMBOL '|'
 
 /**********SCORE DISPLAY**********/
@@ -138,7 +131,6 @@
 #define HIGH_SCORES_PROMPT_COLUMNS 37
 #define HIGH_SCORES_PROMPT_X 10
 #define HIGH_SCORES_PROMPT_Y 24
-//#define HIGH_SCORES_PROMPT_FILE "prompts\\highscores_prompt"
 #define HIGH_SCORES_PROMPT_FILE "prompts" FILE_SEPARATOR "highscores_prompt"
 
 /**********GAMEOVER PROMPT**********/
@@ -146,7 +138,6 @@
 #define GAMEOVER_PROMPT_COLUMNS 65
 #define GAMEOVER_PROMPT_X 7
 #define GAMEOVER_PROMPT_Y 8
-//#define GAMEOVER_PROMPT_FILE "prompts\\gameover_prompt"
 #define GAMEOVER_PROMPT_FILE "prompts" FILE_SEPARATOR "gameover_prompt"
 
 /**********QUITGAME PROMPT**********/
@@ -154,7 +145,6 @@
 #define QUITGAME_PROMPT_COLUMNS 37
 #define QUITGAME_PROMPT_X 10
 #define QUITGAME_PROMPT_Y 24
-//#define QUITGAME_PROMPT_FILE "prompts\\quitgame_prompt"
 #define QUITGAME_PROMPT_FILE "prompts" FILE_SEPARATOR "quitgame_prompt"
 
 /**********HIGHSCORES MENU**********/
@@ -162,7 +152,6 @@
 #define HIGHSCORES_MENU_COLUMNS 53
 #define HIGHSCORES_MENU_X 7
 #define HIGHSCORES_MENU_Y 14
-//#define HIGHSCORES_MENU_FILE "backgrounds\\highscores_menu"
 #define HIGHSCORES_MENU_FILE "backgrounds" FILE_SEPARATOR "highscores_menu"
 
 /**********HIGHSCORES SAVE FILE**********/
@@ -179,7 +168,6 @@
 #define ARROW_OPTIONS_MENU_INITIAL_Y 20
 #define ARROW_OPTIONS_MENU_UPPER_LIMIT_X 12
 #define ARROW_OPTIONS_MENU_BOTTOM_LIMIT_X 19
-//#define OPTIONS_MENU_FILE "backgrounds\\options_menu"
 #define OPTIONS_MENU_FILE "backgrounds" FILE_SEPARATOR "options_menu"
 
 /**********MAIN MENU**********/
@@ -190,133 +178,152 @@
 #define ARROW_MAIN_MENU_UPPER_LIMIT_X 17
 #define ARROW_MAIN_MENU_BOTTOM_LIMIT_X 20
 #define ARROW_MENU_COLUMNS 2
-//#define MAIN_MENU_FILE "backgrounds\\main_menu"
 #define MAIN_MENU_FILE "backgrounds" FILE_SEPARATOR "main_menu"
 
 /***************************************************************************/
-//level type
-    enum levelType{ balloonLevel = 1,
-                    monsterLevel,
-                    balloonScatteredLevel };
-
 #define N_LEVEL_TYPES 3
 
+//level type
+enum levelType
+{
+    balloonLevel = 1,
+    monsterLevel,
+    balloonScatteredLevel
+};
+
 //difficulty
-enum difficulty{ easy,
-                 normal,
-                 hard };
+enum difficulty
+{
+    easy,
+    normal,
+    hard
+};
 
 //themes
-    enum theme{ light,
-                vanilla,
-                dark,
-                matrix };
+enum theme
+{
+    light,
+    vanilla,
+    dark,
+    matrix
+};
 
 //symbol
-    enum symbolType{ symbArrow,
-                    symbX };
-
-
+enum symbolType
+{
+    symbArrow,
+    symbX
+};
 /***************************************************************************/
 
-    typedef struct fpsLimit{
-        double delay;
-        int frames;
-        uint64_t startTimeDelay, startTimeOneSecod;
-    } FPSLIMIT;
+typedef struct fpsLimit
+{
+    double delay;
+    int frames;
+    uint64_t startTimeDelay, startTimeOneSecod;
+} FPSLIMIT;
 
-    typedef struct preSets{
-        enum levelType levelType;
-        //arrow
-        short arrowQuantity;
-        short arrowStaggerDelay, arrowHitDelay;
-        bool  arrowConsumableArrows;
-        //archer
-        short archerHitDelay;
-        //balloon
-        short balloonInitialX;
-        short balloonStaggerDelay;
-        short balloonScatteredDelayMax, balloonScatteredDelayMin;
-        //monster
-        short monsterStaggerDelay, monsterSpawnDelay;
-    } PRESETS;
+typedef struct preSets
+{
+    enum levelType levelType;
+    //arrow
+    short arrowQuantity;
+    short arrowStaggerDelay, arrowHitDelay;
+    bool  arrowConsumableArrows;
+    //archer
+    short archerHitDelay;
+    //balloon
+    short balloonInitialX;
+    short balloonStaggerDelay;
+    short balloonScatteredDelayMax, balloonScatteredDelayMin;
+    //monster
+    short monsterStaggerDelay, monsterSpawnDelay;
+} PRESETS;
 
 
-    typedef struct HighScores{
-        struct playerData{
-            char name[HIGHSCORES_MAX_PLAYER_NAME];
-            int score;
-        } player[HIGHSCORES_MAX_SAVED_SCORES];
-        int index;
-
-    } HIGHSCORES;
-
-    typedef struct entityPlayer{
+typedef struct HighScores
+{
+    struct playerData
+    {
         char name[HIGHSCORES_MAX_PLAYER_NAME];
         int score;
-        enum difficulty difficulty;
-        enum theme theme;
-        int level;
-        bool gameOver, levelOver;
-        int arrowsLeft, balloonsDestroyed, monstersKilled;
-    } PLAYER;
+    } player[HIGHSCORES_MAX_SAVED_SCORES];
+    int index;
 
-	typedef struct entityArcher {
-        bool active, keyHitLimit;
-        int x, y;
-        uint64_t startTimeKeyHitLimit;
-	} ARCHER;
+} HIGHSCORES;
 
-	typedef struct entityArrow {
-		bool active[MAX_ARROW_QUANTITY];
-        bool stagger, keyHitLimit;
-        int x[MAX_ARROW_QUANTITY], y[MAX_ARROW_QUANTITY];
-        int index, activeIndex;
-        uint64_t startTimeStagger, startTimeKeyHitLimit;
-	} ARROW;
+typedef struct entityPlayer
+{
+    char name[HIGHSCORES_MAX_PLAYER_NAME];
+    int score;
+    enum difficulty difficulty;
+    enum theme theme;
+    int level;
+    bool gameOver, levelOver;
+    int arrowsLeft, balloonsDestroyed, monstersKilled;
+} PLAYER;
 
-    typedef struct entityBalloon {
-        bool active[BALLOON_QUANTITY];
-        bool stagger, individualStagger[BALLOON_QUANTITY];
-        int x[BALLOON_QUANTITY], y[BALLOON_QUANTITY];
-        int activeIndex;
-        int IndividualDelay[BALLOON_QUANTITY];
-        uint64_t startTimeStagger, startTimeIndividualStagger[BALLOON_QUANTITY];
-    } BALLOON;
+typedef struct entityArcher
+{
+    bool active, keyHitLimit;
+    int x, y;
+    uint64_t startTimeKeyHitLimit;
+} ARCHER;
 
-    typedef struct entityMonster {
-        bool active[MONSTER_QUANTITY];
-        bool stagger, spawn;
-        int x[MONSTER_QUANTITY], y[MONSTER_QUANTITY];
-        int index, activeIndex;
-        uint64_t startTimeStagger, startTimeSpawn;
-    } MONSTER;
+typedef struct entityArrow
+{
+    bool active[MAX_ARROW_QUANTITY];
+    bool stagger, keyHitLimit;
+    int x[MAX_ARROW_QUANTITY], y[MAX_ARROW_QUANTITY];
+    int index, activeIndex;
+    uint64_t startTimeStagger, startTimeKeyHitLimit;
+} ARROW;
 
-    typedef struct entitySkin{
-        char archer[ARCHER_ROWS * ARCHER_COLUMNS];
-        char arrow[ARROW_ROWS * ARROW_COLUMNS];
-        char balloon[BALLOON_ROWS * BALLOON_COLUMNS];
-        char monster[MONSTER_ROWS * MONSTER_COLUMNS];
-    } SKIN;
+typedef struct entityBalloon
+{
+    bool active[BALLOON_QUANTITY];
+    bool stagger, individualStagger[BALLOON_QUANTITY];
+    int x[BALLOON_QUANTITY], y[BALLOON_QUANTITY];
+    int activeIndex;
+    int IndividualDelay[BALLOON_QUANTITY];
+    uint64_t startTimeStagger, startTimeIndividualStagger[BALLOON_QUANTITY];
+} BALLOON;
 
-	typedef struct Backgrounds{
-		char mainMenu[MAIN_MENU_ROWS * MAIN_MENU_COLUMNS];
-		char optionsMenu[OPTIONS_MENU_ROWS * OPTIONS_MENU_COLUMNS];
-		char game[CANVAS_ROWS * CANVAS_COLUMNS];
-        char highScores[HIGHSCORES_MENU_ROWS * HIGHSCORES_MENU_COLUMNS];
-	} BACKGROUND;
+typedef struct entityMonster
+{
+    bool active[MONSTER_QUANTITY];
+    bool stagger, spawn;
+    int x[MONSTER_QUANTITY], y[MONSTER_QUANTITY];
+    int index, activeIndex;
+    uint64_t startTimeStagger, startTimeSpawn;
+} MONSTER;
 
-    typedef struct Prompts{
-        char highScoresPrompt[HIGH_SCORES_PROMPT_ROWS * HIGH_SCORES_PROMPT_COLUMNS];
-        char gameoverPrompt[GAMEOVER_PROMPT_ROWS * GAMEOVER_PROMPT_COLUMNS];
-        char quitGamePrompt[QUITGAME_PROMPT_ROWS * QUITGAME_PROMPT_COLUMNS];
-    } PROMPT;
+typedef struct entitySkin
+{
+    char archer[ARCHER_ROWS * ARCHER_COLUMNS];
+    char arrow[ARROW_ROWS * ARROW_COLUMNS];
+    char balloon[BALLOON_ROWS * BALLOON_COLUMNS];
+    char monster[MONSTER_ROWS * MONSTER_COLUMNS];
+} SKIN;
+
+typedef struct Backgrounds
+{
+    char mainMenu[MAIN_MENU_ROWS * MAIN_MENU_COLUMNS];
+    char optionsMenu[OPTIONS_MENU_ROWS * OPTIONS_MENU_COLUMNS];
+    char game[CANVAS_ROWS * CANVAS_COLUMNS];
+    char highScores[HIGHSCORES_MENU_ROWS * HIGHSCORES_MENU_COLUMNS];
+} BACKGROUND;
+
+typedef struct Prompts
+{
+    char highScoresPrompt[HIGH_SCORES_PROMPT_ROWS * HIGH_SCORES_PROMPT_COLUMNS];
+    char gameoverPrompt[GAMEOVER_PROMPT_ROWS * GAMEOVER_PROMPT_COLUMNS];
+    char quitGamePrompt[QUITGAME_PROMPT_ROWS * QUITGAME_PROMPT_COLUMNS];
+} PROMPT;
 
 /********************************************FUNCTION DECLARATION********************************************/
 /*******SPECIAL FUNCTIONS*******/
 void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printTags);
-//void gotoxy(int x,int y);
-//void showCursor(bool x);
 
 /*******FILE FUNCTIONS*******/
 bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]);
@@ -333,6 +340,7 @@ bool highscoresPrompt();
 void rearrangeScores();
 uint64_t setQuitGamePrompt(char prompt[]);
 void setGameOver(char prompt[]);
+
 /********PRINT FUNCTIONS*******/
 void printBackground(char background[], int rows, int columns, int startRow, int StartColumn);
 void printPrompt(char prompt[], int rows, int columns, int startRow, int startColumn, bool clean);
@@ -340,8 +348,8 @@ void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol);
 void printNumberInGame(int value, int x, int y, char format[4]);
 void printStringInGame(char *string, int x, int y);
 void draw();
+
 /*******TIME FUNCTIONS*******/
-//double time_diff(uint64_t startTime);
 bool keyHitControl(uint64_t startTime, double delay);
 bool staggerControl(uint64_t *startTime, double delay);
 void staggerControlScatteredBalloon(BALLOON *balloon);
@@ -379,26 +387,37 @@ HIGHSCORES highScore;
 SKIN skin;
 BACKGROUND backGround;
 PROMPT prompt;
-FPSLIMIT fps = { .delay = (1000/(double)FPS_LIMIT), //ms
-                 .frames = 0,
-                 .startTimeDelay = 0,
-                 .startTimeOneSecod = 0 };
+FPSLIMIT fps =
+{
+    .delay = (1000/(double)FPS_LIMIT), //ms
+    .frames = 0,
+    .startTimeDelay = 0,
+    .startTimeOneSecod = 0
+};
 
-PLAYER player = {   .name = {0},
-                    .score = 0,
-                    .difficulty = normal,
-                    .theme = vanilla,
-                    .level = 1,
-                    .gameOver = false,
-                    .levelOver = false,
-                    .arrowsLeft = 0,
-                    .balloonsDestroyed = 0,
-                    .monstersKilled = 0 };
+PLAYER player =
+{
+    .name = {0},
+    .score = 0,
+    .difficulty = normal,
+    .theme = vanilla,
+    .level = 1,
+    .gameOver = false,
+    .levelOver = false,
+    .arrowsLeft = 0,
+    .balloonsDestroyed = 0,
+    .monstersKilled = 0
+};
+
 PRESETS preset;
+
+/*********************************************************
+* Function Definitions
+*********************************************************/
 
 int main(void){
 
-// Init terminal
+// Initialize terminal
 #if WINDOWS_EN
     hide_cursor(1);
     system("MODE con cols=82 lines=36");
@@ -538,7 +557,6 @@ bool highscoresPrompt(){
 		clrscr();
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
         gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
-        //fflush(stdin);
         set_nonblock(0);
         hide_cursor(0);
         fgets(player.name, HIGHSCORES_MAX_PLAYER_NAME, stdin);
@@ -566,23 +584,6 @@ void rearrangeScores(){
     strcpy(highScore.player[i].name, player.name);
     highScore.player[i].score = player.score;
 }
-
-//void gotoxy (int y, int x){ //posiciona o cursor
-//		COORD coord = {0, 0};
-//		coord.X = x; coord.Y = y;
-//		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-//	}
-//
-//void showCursor(bool condition){ //esconde ou mostra o cursor
-//	if(condition == false){
-//		CONSOLE_CURSOR_INFO cursor = {1, false};
-//		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
-//	}
-//	else{
-//		CONSOLE_CURSOR_INFO cursor = {1, true};
-//		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
-//	}
-//}
 
 void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
 
@@ -627,7 +628,6 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
     if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);//arrow
 
     //menu movement
-    //fflush(stdin);
 	while(key != ENTER){
 		if(kbhit()){
 			key = get_char();
@@ -662,7 +662,7 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
 
 	}
 
-    //clean final position after the selection
+    // clear final position after the selection
     if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);//arrow
 
 	return ((i - upperLimitX)/leap); //return the option starting at 0
@@ -935,7 +935,6 @@ void gameLoop(){
             writeHightScores();
         }
         player.score = 0; //reset player score
-        //fflush(stdin);
     }
 }
 
@@ -967,7 +966,6 @@ uint64_t setQuitGamePrompt(char prompt[]){
 
     printPrompt(prompt, QUITGAME_PROMPT_ROWS, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_X, QUITGAME_PROMPT_Y, false);
     char key = 0;
-    //fflush(stdin);
     do{
         key = get_char();
         msleep(10);
@@ -1238,7 +1236,6 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
                         }
                     }
                 }
-                //gotoxy(2,20); printf("%3d", balloon->x[0]);
             }
         }
         if(balloon->activeIndex == 0 && arrow->activeIndex == 0){
@@ -1251,7 +1248,6 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
         if(monster->activeIndex > 0 && !monster->stagger){
             for(int i=0; i < monster->index; i++){
                 if(monster->active[i]){
-                    //gotoxy(2,20); printf("%3d", monster->y[0]);
                     monster->y[i]--;
                     //appearing from the right
                     if(monster->y[i] > (MONSTER_RIGHT_LIMIT - MONSTER_COLUMNS)){
@@ -1290,7 +1286,6 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
                     }
                 }
             }
-            //getchar();
         }
         if(monster->activeIndex == 0 && monster->index == MONSTER_QUANTITY && arrow->activeIndex == 0){
             player.levelOver = true;
@@ -1383,9 +1378,7 @@ bool hitArcherDetector(ARCHER *archer, MONSTER *monster){
                                     for(int a2=0; a2 < ARCHER_COLUMNS; a2++){
                                         if((monster->y[i] + m2) == (archer->y + a2)){
                                             if(skin.monster[(m * MONSTER_COLUMNS) + m2] != ' ' && skin.archer[(a * ARCHER_COLUMNS) + a2] != ' '){
-                                                //getchar();
                                                 return true;
-                                                //break;
                                             }
                                         }
                                     }
@@ -1415,7 +1408,6 @@ void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
                                 // X hitbox check
                                 for(int n=0; n < BALLOON_ROWS; n++){
                                     if(arrow->x[i] == balloon->x[j] + n){
-                                        //getchar();
                                         if(preset.arrowConsumableArrows){
                                             arrow->active[i] = false;
                                             for(int a=0; a < ARROW_COLUMNS; a++){
@@ -1557,8 +1549,6 @@ bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
 		if(pont_arq){
 			while(feof(pont_arq) == false){
 				if(fread(&read, sizeof(char), 1, pont_arq)){
-                    //gotoxy(i,j);
-					//printf("%c", read);
                     if (read != '\n' && read != '\r')
                     {
                         // Check file size
@@ -1592,8 +1582,6 @@ bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
 }
 
 bool keyHitControl(uint64_t startTime, double delay){
-    //double time_difference= time_diff(startTime, clock());
-    //gotoxy(3,25); printf("%lf", time_difference );
     if(time_diff(startTime) >= delay){
         return false;
     }
@@ -1638,9 +1626,6 @@ void setBalloonFirstRowPosition(BALLOON *balloon){
 
 void setBalloonScatteredPostition(BALLOON *balloon){
     srand(time(0));
-    // for random x begin
-    /*int max1 = (BALLOON_LOWER_LIMIT-BALLOON_ROWS) - BALLOON_UPPER_LIMIT;
-    balloon->x[i] = BALLOON_UPPER_LIMIT + ( (rand() % max1)  + 1)*/
     int max2 = preset.balloonScatteredDelayMax - preset.balloonScatteredDelayMin;
 
     balloon->activeIndex = BALLOON_QUANTITY;
@@ -1659,18 +1644,15 @@ void setMonsterFirstPosition(MONSTER *monster){
     for(int i=0; i < MONSTER_QUANTITY; i++){
         monster->x[i] = MONSTER_UPPER_LIMIT + ( (rand() % max)  + 1);
         monster->y[i] = MONSTER_INITIAL_Y;
-        //gotoxy(monster->x[i], monster->y[i]); printf("here"); getchar();
     }
 
 }
 
 bool spawnRateMonster(MONSTER *monster, double delay){
-    //gotoxy(3,20); printf("%lf", time_difference );
 
     if(time_diff(monster->startTimeSpawn) >= delay){
 
         if(monster->index < MONSTER_QUANTITY){
-            //getchar();
             monster->active[monster->index] = true;
             monster->activeIndex++;
             monster->index++;
