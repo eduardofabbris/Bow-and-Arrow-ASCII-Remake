@@ -14,13 +14,13 @@
 #define ESC 27 //27 = esc in ascci
 #define UP 72 //72 = H in ascci = arrow up
 #define DOWN 80 //80 = P in ascci = arrow down
-#define ENTER 13 //13 = return in ASCII 
+#define ENTER 13 //13 = return in ASCII
 #define NULL 0
 
 //Special Use
 #define SPECIAL_INTERFACE 0
 
-/**********STANDARD PRESETS**********/ 
+/**********STANDARD PRESETS**********/
 
 #define MAX_LEVEL 27
 #define FPS_LIMIT 120
@@ -127,7 +127,7 @@
 
 /**********ARROW_LEFT_DISPLAY**********/
 #define ARROW__LEFT_DISPLAY_X 3
-#define ARROW__LEFT_DISPLAY_SYMBOL 25 //alt code 
+#define ARROW__LEFT_DISPLAY_SYMBOL 25 //alt code
 
 /**********SCORE DISPLAY**********/
 #define SCORE_DISPLAY_X 2
@@ -185,7 +185,7 @@
 #define ARROW_MAIN_MENU_INITIAL_POSITION_X 17
 #define ARROW_MAIN_MENU_INITIAL_POSITION_Y 34
 #define ARROW_MAIN_MENU_UPPER_LIMIT_X 17
-#define ARROW_MAIN_MENU_BOTTOM_LIMIT_X 20 
+#define ARROW_MAIN_MENU_BOTTOM_LIMIT_X 20
 #define ARROW_MENU_COLUMNS 2
 #define MAIN_MENU_FILE "backgrounds\\main_menu"
 
@@ -209,7 +209,7 @@ enum difficulty{ easy,
                 matrix };
 
 //symbol
-    enum symbolType{ symbArrow, 
+    enum symbolType{ symbArrow,
                     symbX };
 
 
@@ -244,7 +244,7 @@ enum difficulty{ easy,
             int score;
         } player[HIGHSCORES_MAX_SAVED_SCORES];
         int index;
-        
+
     } HIGHSCORES;
 
     typedef struct entityPlayer{
@@ -262,7 +262,7 @@ enum difficulty{ easy,
         int x, y;
         LONGLONG startTimeKeyHitLimit;
 	} ARCHER;
-	
+
 	typedef struct entityArrow {
 		bool active[MAX_ARROW_QUANTITY];
         bool stagger, keyHitLimit;
@@ -377,7 +377,7 @@ BACKGROUND backGround;
 PROMPT prompt;
 FPSLIMIT fps = { .delay = (1000/(double)FPS_LIMIT), //ms
                  .frames = NULL,
-                 .startTimeDelay = NULL, 
+                 .startTimeDelay = NULL,
                  .startTimeOneSecod = NULL };
 
 PLAYER player = {   .name = {NULL},
@@ -386,15 +386,15 @@ PLAYER player = {   .name = {NULL},
                     .theme = vanilla,
                     .level = 1,
                     .gameOver = false,
-                    .levelOver = false, 
-                    .arrowsLeft = NULL, 
-                    .balloonsDestroyed = NULL, 
+                    .levelOver = false,
+                    .arrowsLeft = NULL,
+                    .balloonsDestroyed = NULL,
                     .monstersKilled = NULL };
 PRESETS preset;
 
 int main(void){
 	if(loadFiles()){
-        system("MODE con cols=82 lines=36"); 
+        system("MODE con cols=82 lines=36");
         readHighScores();
         //MENU
         mainMenu();
@@ -410,11 +410,11 @@ bool loadFiles(){
         !readTxtFiles(skin.archer, ARCHER_COLUMNS, ARCHER_SKIN_FILE) ||
         !readTxtFiles(skin.arrow, ARROW_COLUMNS, ARROW_SKIN_FILE) ||
         !readTxtFiles(skin.balloon, BALLOON_COLUMNS, BALLOON_SKIN_FILE) ||
-        !readTxtFiles(skin.monster, MONSTER_COLUMNS, MONSTER_SKIN_FILE) || 
+        !readTxtFiles(skin.monster, MONSTER_COLUMNS, MONSTER_SKIN_FILE) ||
         !readTxtFiles(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_FILE) ||
         !readTxtFiles(prompt.gameoverPrompt, GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_FILE) ||
         !readTxtFiles(prompt.quitGamePrompt, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_FILE) ){
-		
+
 		return false;
 	}
     return true;
@@ -427,9 +427,9 @@ bool readHighScores(){
 
     snprintf(buf, sizeof(buf),"save\\\\%s.bin", HIGHSCORES_FILE);
 	pont_arq = fopen(buf, "rb");
-	
+
     if(pont_arq){
-		while(!feof(pont_arq)){ 
+		while(!feof(pont_arq)){
 			if(fread(&highScore.player[i], sizeof(highScore.player[NULL]), 1, pont_arq)){
                 i++;
 			}
@@ -445,19 +445,19 @@ bool readHighScores(){
         getchar();
         return false;
 	}
-	return true; 
+	return true;
 }
 
 void writeHightScores(){
 	FILE *pont_arq;
     char buf[100];
 	int i;
-	
+
     snprintf(buf, sizeof(buf),"save\\\\%s.bin", HIGHSCORES_FILE);
 	pont_arq = fopen(buf, "wb");
 	if(pont_arq){
 		for(i = 0; i < highScore.index; i++){
-			fwrite(&highScore.player[i], sizeof(highScore.player[NULL]), 1, pont_arq); 
+			fwrite(&highScore.player[i], sizeof(highScore.player[NULL]), 1, pont_arq);
 		}
 		fclose(pont_arq);
 	}
@@ -495,7 +495,7 @@ bool highscoresPrompt(){
             print = true; break;
         }
     }
-     
+
     if(print){
         system("cls");
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
@@ -515,14 +515,14 @@ void rearrangeScores(){
             //pull everyone one down starting from the end
             for(int j=(highScore.index-1); j > i ; j--){
                 strcpy(highScore.player[j].name, highScore.player[j-1].name);
-                highScore.player[j].score = highScore.player[j-1].score; 
+                highScore.player[j].score = highScore.player[j-1].score;
             }
             break;
         }
     }
     //replace score
     strcpy(highScore.player[i].name, player.name);
-    highScore.player[i].score = player.score;    
+    highScore.player[i].score = player.score;
 }
 
 void gotoxy (int y, int x){ //posiciona o cursor
@@ -543,7 +543,7 @@ void showCursor(bool condition){ //esconde ou mostra o cursor
 }
 
 void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
-	
+
     switch(symbol){
         case symbArrow:{
             char arrow[ARROW_MENU_COLUMNS] = "->";
@@ -581,12 +581,12 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
 	int i = initialX;
 	int j = initialY;
     //print initial position
-    if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);//arrow 
+    if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);//arrow
 
     //menu movement
     fflush(stdin);
 	while(key != ENTER){
-		if(kbhit()){ 
+		if(kbhit()){
 			key = getch();
             //clean symbol
             if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);
@@ -602,32 +602,32 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
 					}
 				} break;
                 case 's': case 'S': case DOWN:{
-					if(i < bottomLimitX){ //bottom limit 
+					if(i < bottomLimitX){ //bottom limit
 						i += leap; //down 1
 					}
 					else{ // i = bottomLimitX
 						i = upperLimitX;
 					}
 				} break;
-                case ESC: return ESC; 
+                case ESC: return ESC;
 			}
             //reprint symbol
             if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);
             else if(symbol == symbX) printSymbolMenu(false, i, j, symbX);
 
-		} 
-		
+		}
+
 	}
-	
+
     //clean final position after the selection
-    if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);//arrow 
-	
+    if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);//arrow
+
 	return ((i - upperLimitX)/leap); //return the option starting at 0
 }
 
 void printBackground(char background[], int rows, int columns, int startRow, int StartColumn){
 
-	system("cls"); 	
+	system("cls");
 	for(int i = 0; i < rows; i++){
 		for(int j = 0; j < columns; j++){
 			if(background[ (i * columns) + j] != '\0'){
@@ -643,12 +643,12 @@ void mainMenu(){
 	bool endMenu = false;
 	int option;
 	showCursor(false);
-	
+
 
 	while (!endMenu){
 		printBackground(backGround.mainMenu  , MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, 0, 0);
 		option = symbolMenuMovement(ARROW_MAIN_MENU_INITIAL_POSITION_X, ARROW_MAIN_MENU_INITIAL_POSITION_Y, ARROW_MAIN_MENU_UPPER_LIMIT_X, ARROW_MAIN_MENU_BOTTOM_LIMIT_X, 1, symbArrow);
-		
+
 		switch(option){
 			case 0:{ //play
 				gameLoop();
@@ -657,23 +657,23 @@ void mainMenu(){
                 optionsMenu();
 			} break;
 			case 2:{ //best scores
-                highscoresMenu();				
+                highscoresMenu();
 			} break;
-			case 3: case ESC: {// quit 
-				gotoxy(35, 1); //in case of appearing a terminal message 
+			case 3: case ESC: {// quit
+				gotoxy(35, 1); //in case of appearing a terminal message
 				endMenu = true;
 			}
 		}
-	} 
+	}
 
-} 
+}
 
 void optionsMenu(){
     enum difficulty difficulty;
     enum theme theme;
     bool endMenu = false;
     int option, initialX1, initialX2;
-    
+
 
     while(!endMenu){
         printBackground(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_X, OPTIONS_MENU_Y);
@@ -689,11 +689,11 @@ void optionsMenu(){
             case dark: initialX2 = 23; printSymbolMenu(false, initialX2, 38, symbX); break;
             case matrix: initialX2 = 25; printSymbolMenu(false, initialX2, 38, symbX); break;
         }
-        //gets the selection between difficulty and theme       
+        //gets the selection between difficulty and theme
         option = symbolMenuMovement(ARROW_OPTIONS_MENU_INITIAL_X, ARROW_OPTIONS_MENU_INITIAL_Y, ARROW_OPTIONS_MENU_UPPER_LIMIT_X, ARROW_OPTIONS_MENU_BOTTOM_LIMIT_X, 7, symbArrow);
-        switch(option){ 
+        switch(option){
             case 0: {
-                //gets the selection of difficulty 
+                //gets the selection of difficulty
                 difficulty = symbolMenuMovement(initialX1, 38, 12, 16, 2, symbX);
                 switch(difficulty){
                     case easy: player.difficulty = easy; break; //x= 12, y=38
@@ -704,7 +704,7 @@ void optionsMenu(){
             case 1: {
                 //gets the selection of theme
                 theme = symbolMenuMovement(initialX2, 38, 19, 25, 2,symbX);
-                switch(theme){	
+                switch(theme){
                     case light: system("Color 71"); player.theme = light; break;//light //x=19, y=38
                     case vanilla: system("Color 07"); player.theme = vanilla; break; //vanilla //x=21, y=38
                     case dark: system("color 06"); player.theme = dark; break; //dark //x=23, y=38
@@ -719,7 +719,7 @@ void optionsMenu(){
 
 /*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                                     @GAME_PRINCIPAL_CODE
- */ 
+ */
 //note: if you have '\0' in your matrix, it's not going to do spaces!! <- use gotoxy
 
 void gameLoop(){
@@ -729,7 +729,7 @@ void gameLoop(){
     static ARCHER archer = {.active = true,
                             .keyHitLimit = false,
                             .x = ARCHER_INITIAL_X,
-                            .y = ARCHER_INITIAL_Y, 
+                            .y = ARCHER_INITIAL_Y,
                             .startTimeKeyHitLimit = NULL };
 
     ARROW arrow = { .active = {false},
@@ -742,16 +742,16 @@ void gameLoop(){
                     .startTimeStagger = NULL,
                     .startTimeKeyHitLimit = NULL };
 
-    BALLOON balloon = { .active = {false}, 
+    BALLOON balloon = { .active = {false},
                         .stagger  = false,
-                        .individualStagger = {false}, 
-                        .x = {NULL}, 
-                        .y = {NULL}, 
+                        .individualStagger = {false},
+                        .x = {NULL},
+                        .y = {NULL},
                         .activeIndex = NULL,
-                        .IndividualDelay = {NULL}, 
-                        .startTimeStagger = NULL, 
+                        .IndividualDelay = {NULL},
+                        .startTimeStagger = NULL,
                         .startTimeIndividualStagger = {NULL} };
-    
+
     MONSTER monster = { .active = {NULL},
                         .stagger = false,
                         .spawn = false,
@@ -761,13 +761,13 @@ void gameLoop(){
                         .activeIndex = NULL,
                         .startTimeStagger = NULL,
                         .startTimeSpawn = NULL };
-    
-    
+
+
     //just need to execute one time
-    if(player.level == 1){ 
+    if(player.level == 1){
         //reset archer position and state
-        archer.active = true; 
-        archer.x = ARCHER_INITIAL_X; 
+        archer.active = true;
+        archer.x = ARCHER_INITIAL_X;
         archer.y = ARCHER_INITIAL_Y;
 
         printBackground(backGround.game, CANVAS_ROWS, CANVAS_COLUMNS, 0, 0);
@@ -794,7 +794,7 @@ void gameLoop(){
     switch(preset.levelType){
         case balloonLevel: {
             setBalloonFirstRowPosition(&balloon);
-            balloon.startTimeStagger = t.QuadPart; 
+            balloon.startTimeStagger = t.QuadPart;
         } break;
         case monsterLevel: {
             setMonsterFirstPosition(&monster);
@@ -816,10 +816,10 @@ void gameLoop(){
     //getchar();
     while(!player.gameOver && !player.levelOver) {
         show(&archer, &arrow, &balloon, &monster);
- 
+
         if(kbhit()){
             key = getch();
-            
+
             switch(key){
                 case 'w': case 'W': case UP: archerMovUp(&archer); break;
                 case 's': case 'S': case DOWN: archerMovDown(&archer); break;
@@ -829,14 +829,14 @@ void gameLoop(){
                     LONGLONG spentTime;
                     spentTime =  setQuitGamePrompt(prompt.quitGamePrompt);
                     //update time
-                    arrow.startTimeKeyHitLimit += spentTime;   
+                    arrow.startTimeKeyHitLimit += spentTime;
                     switch(preset.levelType){
                         case monsterLevel: monster.startTimeSpawn += spentTime; break;
                     }
                 }  break;
-            }   
+            }
         }
-        
+
         //TIME CONTROL
         archer.keyHitLimit = keyHitControl(archer.startTimeKeyHitLimit, preset.archerHitDelay);
         arrow.stagger = staggerControl(&arrow.startTimeStagger, preset.arrowStaggerDelay);
@@ -852,18 +852,18 @@ void gameLoop(){
             case balloonScatteredLevel: {
                 staggerControlScatteredBalloon(&balloon);
             }
-        } 
+        }
 
         //SPECIAL INTERFACE
-        #if SPECIAL_INTERFACE 
+        #if SPECIAL_INTERFACE
             specialInterface(arrow, balloon, monster, false);
-        #endif    
-        
+        #endif
+
     }
     player.arrowsLeft += (preset.arrowQuantity - arrow.index);
     player.score += (player.arrowsLeft * ARROW_LEFT_POINTS);
     //LEVELS
-    if(!player.gameOver){    
+    if(!player.gameOver){
         player.level++;
         player.levelOver = false;
         if(player.level <= MAX_LEVEL){
@@ -882,7 +882,7 @@ void gameLoop(){
 }
 
 void printPrompt(char prompt[], int rows, int columns, int startRow, int startColumn, bool clean){
-	
+
     if(!clean){
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < columns; j++){
@@ -897,14 +897,14 @@ void printPrompt(char prompt[], int rows, int columns, int startRow, int startCo
                 gotoxy((i + startRow),(j + startColumn));
                 printf(" ");
             }
-        }     
+        }
     }
 }
 
 LONGLONG setQuitGamePrompt(char prompt[]){
     LARGE_INTEGER t;
     LONGLONG startTime, endTime;
-    
+
     QueryPerformanceCounter(&t);//gets the start clocks
     startTime = t.QuadPart;
 
@@ -914,7 +914,7 @@ LONGLONG setQuitGamePrompt(char prompt[]){
     do{
         key = getch();
     } while(key != ENTER && key != ESC);
-    
+
     switch(key){
         case ENTER: player.gameOver = true; break;
         case ESC: printPrompt(NULL, QUITGAME_PROMPT_ROWS, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_X, QUITGAME_PROMPT_Y, true); break;
@@ -944,7 +944,7 @@ void setGameOver(char prompt[]){
     gotoxy(15,53); printf("%06i", player.arrowsLeft * ARROW_LEFT_POINTS);
     //total score
     gotoxy(17,36); printf("%06i", player.score);
-    
+
     //RESET PLAYER STATUS
     player.level = 1;
     player.gameOver = false;
@@ -978,9 +978,9 @@ void setLevelPreset(){
             preset.levelType = balloonLevel;
             if(nBalloonLevel == 0){
                 preset.balloonInitialX = BALLOON_ROW_INITIAL_X;
-            } 
+            }
             else{
-                preset.balloonInitialX = BALLOON_LOWER_LIMIT;   
+                preset.balloonInitialX = BALLOON_LOWER_LIMIT;
             }
             preset.balloonStaggerDelay -= nBalloonLevel*5;
             preset.arrowHitDelay += nBalloonLevel*5;
@@ -1061,7 +1061,7 @@ void setDifficultyPreset(){
 }
 
 void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printTags){
-    
+
     if(printTags){
         showCursor(true);
         gotoxy(3,68); printf("FPS:");
@@ -1106,8 +1106,8 @@ void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
     //update actions in game
     update(&(*archer), &(*arrow), &(*balloon), &(*monster));
 
-    //FPS CONTROL to print screen    
-    if(timeDiff(fps.startTimeDelay) >= fps.delay){ 
+    //FPS CONTROL to print screen
+    if(timeDiff(fps.startTimeDelay) >= fps.delay){
         QueryPerformanceCounter(&t1); //has to be the first, draw consumes time!
         #if SPECIAL_INTERFACE
             fps.frames++;
@@ -1121,9 +1121,9 @@ void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
         if(timeDiff(fps.startTimeOneSecod)  >= 1000){
             QueryPerformanceCounter(&t1);
             //print fps
-            
+
             printNumberInGame(fps.frames, 3, 73, "%04i");
-            fps.frames = 0; 
+            fps.frames = 0;
             fps.startTimeOneSecod = t1.QuadPart;
         }
     #endif
@@ -1134,11 +1134,11 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
 
 /*************************ARROW*************************/
     if(arrow->activeIndex > 0 && !arrow->stagger){
-        for(int i=0; i < arrow->index; i++){ 
+        for(int i=0; i < arrow->index; i++){
             if(arrow->active[i] && (arrow->y[i] < ARROW_RIGHT_LIMIT ) ){
                 gameLayer[arrow->x[i]][arrow->y[i]] = ' ';
                 arrow->y[i]++;
-                
+
                 for(int j=0; j < ARROW_COLUMNS; j++){
                     gameLayer[arrow->x[i]][arrow->y[i] + j] = skin.arrow[j];
                 }
@@ -1154,7 +1154,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
     }
     if(arrow->activeIndex == 0 && arrow->index == preset.arrowQuantity && (balloon->activeIndex > 0 || monster->activeIndex > 0)){
         player.gameOver = true;
-    } 
+    }
 
 /*************************BALLOON*************************/
     if(preset.levelType == balloonLevel || preset.levelType == balloonScatteredLevel){
@@ -1182,7 +1182,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
                     }
                 }
                 //gotoxy(2,20); printf("%3d", balloon->x[0]);
-            }    
+            }
         }
         if(balloon->activeIndex == 0 && arrow->activeIndex == 0){
             player.levelOver = true;
@@ -1193,10 +1193,10 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
     if(preset.levelType == monsterLevel){
         if(monster->activeIndex > 0 && !monster->stagger){
             for(int i=0; i < monster->index; i++){
-                if(monster->active[i]){             
+                if(monster->active[i]){
                     //gotoxy(2,20); printf("%3d", monster->y[0]);
                     monster->y[i]--;
-                    //appearing from the right  
+                    //appearing from the right
                     if(monster->y[i] > (MONSTER_RIGHT_LIMIT - MONSTER_COLUMNS)){
                         for(int i2=1; i2 <= MONSTER_COLUMNS; i2++){
                             if(monster->y[i] > (MONSTER_RIGHT_LIMIT - i2)){
@@ -1213,11 +1213,11 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
                     else{ // < MONSTER_LEFT_LIMIT
                         for(int i3=0, i4=1; i3 > -MONSTER_COLUMNS; i3--, i4++){
                             if(monster->y[i] == i3){
-                                
+
                                 for(int m=0; m < MONSTER_ROWS; m++){
                                     for (int n=0, aux=i4; aux < MONSTER_COLUMNS; n++, aux++){
                                         gameLayer[monster->x[i] + m][MONSTER_LEFT_LIMIT + n] = skin.monster[(m * MONSTER_COLUMNS) + aux];
-                                    } 
+                                    }
                                 }
                                 for(int j=0; j < MONSTER_ROWS; j++){
                                     gameLayer[monster->x[i] + j][MONSTER_COLUMNS+(i3)] = ' ';
@@ -1230,7 +1230,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
                             }
 
                         }
-                    }  
+                    }
                 }
             }
             //getchar();
@@ -1241,10 +1241,10 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
     }
 
 /*************************ARCHER*************************/
-    if(archer->active){ 
+    if(archer->active){
         for(int i=0; i < ARCHER_ROWS; i++){
             for(int j=0; j < ARCHER_COLUMNS; j++){
-                gameLayer[archer->x + i][archer->y + j] = skin.archer[(i*ARCHER_COLUMNS) + j]; 
+                gameLayer[archer->x + i][archer->y + j] = skin.archer[(i*ARCHER_COLUMNS) + j];
             }
         }
         archer->active = false;
@@ -1257,7 +1257,7 @@ void setMonster(MONSTER *monster, int i, int startColumn, int endColumn, bool cl
     for(int m=0; m < MONSTER_ROWS; m++){
         for (int n=startColumn; n < endColumn; n++){
             gameLayer[monster->x[i] + m][monster->y[i] + n] = skin.monster[(m * MONSTER_COLUMNS) + n];
-        } 
+        }
     }
     if(clean){
         for(int j=0; j < MONSTER_ROWS; j++){
@@ -1272,7 +1272,7 @@ void hitMonsterDetector(ARROW *arrow, MONSTER *monster){
             if(arrow->active[i]){
                 for(int j=0; j < monster->index; j++){
                     if(monster->active[j]){
-                        // Y hitbox check  
+                        // Y hitbox check
                         for(int m=0; m < MONSTER_COLUMNS; m++){
                             if(arrow->y[i] + ARROW_COLUMNS == monster->y[j] + m){
                                 // X hitbox check
@@ -1303,7 +1303,7 @@ void hitMonsterDetector(ARROW *arrow, MONSTER *monster){
                                     }
                                 }
                                 break;
-                            }     
+                            }
                         }
                     }
                 }
@@ -1352,7 +1352,7 @@ void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
             if(arrow->active[i]){
                 for(int j=0; j < BALLOON_QUANTITY; j++){
                     if(balloon->active[j]){
-                        // Y hitbox check  
+                        // Y hitbox check
                         for(int m=0; m < BALLOON_COLUMNS; m++){
                             if(arrow->y[i] + ARROW_COLUMNS == balloon->y[j] + m){
                                 // X hitbox check
@@ -1381,7 +1381,7 @@ void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
                                     }
                                 }
                                 break;
-                            }     
+                            }
                         }
                     }
                 }
@@ -1392,7 +1392,7 @@ void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
 
 void printNumberInGame(int value, int x, int y, char format[4]){
     char buf[10] = {NULL};
-    snprintf(buf, sizeof(buf),format, value); 
+    snprintf(buf, sizeof(buf),format, value);
     for(int index=0; index < 10; index++){
         if(buf[index] != '\0') gameLayer[x][y + index] = buf[index];
     }
@@ -1400,14 +1400,14 @@ void printNumberInGame(int value, int x, int y, char format[4]){
 
 void printStringInGame(char string[10], int x, int y){
     char buf[10] = {NULL};
-    snprintf(buf, sizeof(buf),"%s", string); 
+    snprintf(buf, sizeof(buf),"%s", string);
     for(int index=0; index < 10; index++){
         if(buf[index] != '\0') gameLayer[x][y + index] = buf[index];
     }
 }
 
 void setBalloon(BALLOON *balloon, int  i, int startRow, int endRow, bool clean){
-    
+
     for(int m=startRow; m < endRow; m++){
         for(int n=0; n < BALLOON_COLUMNS; n++){
             gameLayer[balloon->x[i] + m][balloon->y[i] + n] = skin.balloon[(m * BALLOON_COLUMNS) + n];
@@ -1416,7 +1416,7 @@ void setBalloon(BALLOON *balloon, int  i, int startRow, int endRow, bool clean){
     if(clean){
         for(int j=0; j < BALLOON_COLUMNS; j++){
             gameLayer[balloon->x[i] + BALLOON_ROWS][balloon->y[i] + j] = ' ';
-        }  
+        }
     }
 
 
@@ -1430,7 +1430,7 @@ void draw(){
                 if(j != CANVAS_LEFT_EDGE_Y && j != CANVAS_RIGHT_EDGE_Y){
                     if(gameLayer[i][j] != '\0'){
                         gotoxy(i,j);
-                        printf("%c", gameLayer[i][j]);                
+                        printf("%c", gameLayer[i][j]);
                     }
                 }
             }
@@ -1466,12 +1466,12 @@ void archerMovDown(ARCHER *archer){
                 gameLayer[archer->x][archer->y + i] = ' ';
             }
             archer->x++;
-            archer->active = true;  
+            archer->active = true;
         }
     }
 }
 
-void arrowShoot(ARCHER archer, ARROW *arrow){ 
+void arrowShoot(ARCHER archer, ARROW *arrow){
     LARGE_INTEGER t1;
     QueryPerformanceCounter(&t1);
 
@@ -1486,29 +1486,29 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
             arrow->y[arrow->index] = archer.y + ARCHER_COLUMNS;
 
             for(int i=0; i < ARROW_COLUMNS; i++){
-                gameLayer[ arrow->x[arrow->index] ][ arrow->y[arrow->index] + i] = skin.arrow[i]; 
+                gameLayer[ arrow->x[arrow->index] ][ arrow->y[arrow->index] + i] = skin.arrow[i];
             }
             arrow->index++;
 
         }
     }
 
-}   
+}
 
 bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]){
     char buf[100];
 	FILE *pont_arq;
-	char read; 
+	char read;
 	int i=0, j=0;
-	
+
         snprintf(buf, sizeof(buf),"graphics\\\\%s.txt", txtFileName);
 		pont_arq = fopen(buf, "r");
 		if(pont_arq){
 			while(feof(pont_arq) == false){
-    			if(fread(&read, sizeof(char), 1, pont_arq)){ 
+				if(fread(&read, sizeof(char), 1, pont_arq)){
 					//printf("%c", read);
                     if(j < columns){
-                    	matrixObject[(i*columns) + j] = read;
+						matrixObject[(i*columns) + j] = read;
                         j++;
                     }
                     else{
@@ -1534,29 +1534,29 @@ bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]){
 double timeDiff(LONGLONG startTime){
     static LARGE_INTEGER freq;
     LARGE_INTEGER endTime;
-    
+
     if(freq.QuadPart == NULL){ //just read the frequency one time
         QueryPerformanceFrequency(&freq);
     }
 
     QueryPerformanceCounter(&endTime);
     return 1000*( (double)(endTime.QuadPart - startTime)/ freq.QuadPart );  //milisegundos
-    
+
 }
 
 bool keyHitControl(LONGLONG startTime, double delay){
     //double timeDifference= timeDiff(startTime, clock());
-    //gotoxy(3,25); printf("%lf", timeDifference );   
+    //gotoxy(3,25); printf("%lf", timeDifference );
     if(timeDiff(startTime) >= delay){
-        return false;               
+        return false;
     }
-    else{ 
+    else{
         return true;
     }
 }
 
 bool staggerControl(LONGLONG *startTime, double delay){
-    LARGE_INTEGER t1;    
+    LARGE_INTEGER t1;
 
 	if(timeDiff(*startTime) >= delay){
         QueryPerformanceCounter(&t1);
@@ -1584,7 +1584,7 @@ void staggerControlScatteredBalloon(BALLOON *balloon){
 }
 
 void setBalloonFirstRowPosition(BALLOON *balloon){
-    
+
     balloon->activeIndex = BALLOON_QUANTITY;
     for(int i=0; i < BALLOON_QUANTITY; i++){
         balloon->x[i] = preset.balloonInitialX;
@@ -1597,7 +1597,7 @@ void setBalloonScatteredPostition(BALLOON *balloon){
     srand(time(NULL));
     // for random x begin
     /*int max1 = (BALLOON_LOWER_LIMIT-BALLOON_ROWS) - BALLOON_UPPER_LIMIT;
-    balloon->x[i] = BALLOON_UPPER_LIMIT + ( (rand() % max1)  + 1)*/ 
+    balloon->x[i] = BALLOON_UPPER_LIMIT + ( (rand() % max1)  + 1)*/
     int max2 = preset.balloonScatteredDelayMax - preset.balloonScatteredDelayMin;
 
     balloon->activeIndex = BALLOON_QUANTITY;
@@ -1614,26 +1614,26 @@ void setMonsterFirstPosition(MONSTER *monster){
     int max = MONSTER_LOWER_LIMIT - MONSTER_UPPER_LIMIT;
 
     for(int i=0; i < MONSTER_QUANTITY; i++){
-        monster->x[i] = MONSTER_UPPER_LIMIT + ( (rand() % max)  + 1);   
-        monster->y[i] = MONSTER_INITIAL_Y;  
-        //gotoxy(monster->x[i], monster->y[i]); printf("here"); getchar();      
+        monster->x[i] = MONSTER_UPPER_LIMIT + ( (rand() % max)  + 1);
+        monster->y[i] = MONSTER_INITIAL_Y;
+        //gotoxy(monster->x[i], monster->y[i]); printf("here"); getchar();
     }
 
 }
 
 bool spawnRateMonster(MONSTER *monster, double delay){
-    LARGE_INTEGER t1;   
+    LARGE_INTEGER t1;
     //gotoxy(3,20); printf("%lf", timeDifference );
 
     if(timeDiff(monster->startTimeSpawn) >= delay){
-       
+
         if(monster->index < MONSTER_QUANTITY){
             //getchar();
             monster->active[monster->index] = true;
             monster->activeIndex++;
             monster->index++;
         }
-         QueryPerformanceCounter(&t1); 
+         QueryPerformanceCounter(&t1);
         monster->startTimeSpawn = t1.QuadPart;
         return true;
     }
