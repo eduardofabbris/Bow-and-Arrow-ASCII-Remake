@@ -2,24 +2,14 @@
  * Made by: Eduardo Fabbris
  */
 #include "include/util.h"
-//#include <stdio.h>
-//#include <stdlib.h>
-#include <stdbool.h> //add boolean data type and define "true" and "false"
-//#include <windows.h>
-//#include <time.h>
-//#include <conio.h>
-//#include <string.h>
+#include <stdbool.h>
 
 //Keys
 #define SPACE 32 //32 = space in ascii
 #define ESC 27 //27 = esc in ascci
-//#define UP 72 //72 = H in ascci = arrow up
-//#define DOWN 80 //80 = P in ascci = arrow down
-//#define ENTER 13 //13 = return in ASCII
-//#define NULL 0
 
-//Special Use
-#define SPECIAL_INTERFACE 0
+// Special Use
+#define DEBUG_MODE 0
 
 /**********STANDARD PRESETS**********/
 
@@ -97,7 +87,7 @@
 //#define ARROW_SKIN_FILE "skins\\arrow_skin"
 #define ARROW_SKIN_FILE "skins" FILE_SEPARATOR "arrow_skin"
 #define ARROW_COLUMNS 3
-#define ARROW_ROW 1
+#define ARROW_ROWS 1
 #define ARROW_RIGHT_LIMIT 77
 
 /**********ARCHER**********/
@@ -304,7 +294,7 @@ enum difficulty{ easy,
 
     typedef struct entitySkin{
         char archer[ARCHER_ROWS * ARCHER_COLUMNS];
-        char arrow[ARROW_ROW * ARROW_COLUMNS];
+        char arrow[ARROW_ROWS * ARROW_COLUMNS];
         char balloon[BALLOON_ROWS * BALLOON_COLUMNS];
         char monster[MONSTER_ROWS * MONSTER_COLUMNS];
     } SKIN;
@@ -329,7 +319,7 @@ void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printT
 //void showCursor(bool x);
 
 /*******FILE FUNCTIONS*******/
-bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]);
+bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]);
 bool loadFiles();
 bool readHighScores();
 void writeHightScores();
@@ -432,8 +422,6 @@ int main(void){
     set_nonblock(0);
     hide_cursor(0);
     system("echo -ne '\e[8;24;80t'");
-    //TODO:
-    //printf("\x1b[0m");
 #endif
 
     clrscr();
@@ -441,17 +429,17 @@ int main(void){
 }
 
 bool loadFiles(){
-	if( !readTxtFiles(backGround.optionsMenu, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_FILE) ||
-        !readTxtFiles(backGround.mainMenu, MAIN_MENU_COLUMNS, MAIN_MENU_FILE) ||
-        !readTxtFiles(backGround.highScores, HIGHSCORES_MENU_COLUMNS, HIGHSCORES_MENU_FILE) ||
-        !readTxtFiles(backGround.game, CANVAS_COLUMNS, CANVAS_SKIN_FILE) ||
-        !readTxtFiles(skin.archer, ARCHER_COLUMNS, ARCHER_SKIN_FILE) ||
-        !readTxtFiles(skin.arrow, ARROW_COLUMNS, ARROW_SKIN_FILE) ||
-        !readTxtFiles(skin.balloon, BALLOON_COLUMNS, BALLOON_SKIN_FILE) ||
-        !readTxtFiles(skin.monster, MONSTER_COLUMNS, MONSTER_SKIN_FILE) ||
-        !readTxtFiles(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_FILE) ||
-        !readTxtFiles(prompt.gameoverPrompt, GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_FILE) ||
-        !readTxtFiles(prompt.quitGamePrompt, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_FILE) ){
+	if( !readTxtFiles(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_FILE) ||
+        !readTxtFiles(backGround.mainMenu, MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, MAIN_MENU_FILE) ||
+        !readTxtFiles(backGround.highScores, HIGHSCORES_MENU_ROWS, HIGHSCORES_MENU_COLUMNS, HIGHSCORES_MENU_FILE) ||
+        !readTxtFiles(backGround.game, CANVAS_ROWS, CANVAS_COLUMNS, CANVAS_SKIN_FILE) ||
+        !readTxtFiles(skin.archer, ARCHER_ROWS, ARCHER_COLUMNS, ARCHER_SKIN_FILE) ||
+        !readTxtFiles(skin.arrow, ARROW_ROWS, ARROW_COLUMNS, ARROW_SKIN_FILE) ||
+        !readTxtFiles(skin.balloon, BALLOON_ROWS, BALLOON_COLUMNS, BALLOON_SKIN_FILE) ||
+        !readTxtFiles(skin.monster, MONSTER_ROWS, MONSTER_COLUMNS, MONSTER_SKIN_FILE) ||
+        !readTxtFiles(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_FILE) ||
+        !readTxtFiles(prompt.gameoverPrompt, GAMEOVER_PROMPT_ROWS,  GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_FILE) ||
+        !readTxtFiles(prompt.quitGamePrompt, QUITGAME_PROMPT_ROWS, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_FILE) ){
 
 		return false;
 	}
@@ -529,7 +517,6 @@ void highscoresMenu(){
 
     fflush(stdout);
     char key = 0;
-    clrbuf();
     do
     {
         key = get_char();
@@ -849,7 +836,7 @@ void gameLoop(){
     setLevelPreset();
 
     //SPECIAL INTERFACE
-    #if SPECIAL_INTERFACE
+    #if DEBUG_MODE
         specialInterface(arrow, balloon, monster, true);
     #else //print arrows left
         for(int i=0; i < MAX_ARROW_QUANTITY; i++){ //erase arrows left
@@ -879,7 +866,7 @@ void gameLoop(){
     }
 
     //time
-    #if SPECIAL_INTERFACE
+    #if DEBUG_MODE
         fps.startTimeOneSecod = get_clock();
     #endif
     fps.startTimeDelay = arrow.startTimeStagger = get_clock();
@@ -926,7 +913,7 @@ void gameLoop(){
         }
 
         //SPECIAL INTERFACE
-        #if SPECIAL_INTERFACE
+        #if DEBUG_MODE
             specialInterface(arrow, balloon, monster, false);
         #endif
 
@@ -1180,7 +1167,7 @@ void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
 
     //FPS CONTROL to print screen
     if(time_diff(fps.startTimeDelay) >= fps.delay){
-        #if SPECIAL_INTERFACE
+        #if DEBUG_MODE
             fps.frames++;
         #endif
         draw(); //print game screen
@@ -1188,7 +1175,7 @@ void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
 
         fps.startTimeDelay = get_clock();
     }
-    #if SPECIAL_INTERFACE
+    #if DEBUG_MODE
         if(time_diff(fps.startTimeOneSecod)  >= 1000){
             //print fps
 
@@ -1541,7 +1528,7 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
     if(time_diff(arrow->startTimeKeyHitLimit) >= preset.arrowHitDelay) arrow->startTimeKeyHitLimit = get_clock();
     if(!arrow->keyHitLimit){
         if(arrow->index < preset.arrowQuantity){
-            if(!SPECIAL_INTERFACE) gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity) + arrow->index] = ' '; //-1 from display arrows left
+            if(!DEBUG_MODE) gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity) + arrow->index] = ' '; //-1 from display arrows left
 
             arrow->active[arrow->index] = true;
             arrow->activeIndex++;
@@ -1558,11 +1545,11 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
 
 }
 
-bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]){
+bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
     char buf[100];
 	FILE *pont_arq;
 	char read;
-	int i=0, j=0;
+	int file_size = 0;
     char *rd_ptr = matrixObject;
 
         snprintf(buf, sizeof(buf),"ascii_art%s%s.txt", FILE_SEPARATOR, txtFileName);
@@ -1574,42 +1561,23 @@ bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]){
 					//printf("%c", read);
                     if (read != '\n' && read != '\r')
                     {
-                        *rd_ptr = read;
-                        rd_ptr++;
-                        i++;
+                        // Check file size
+                        if (file_size >= col * row)
+                        {
+                            clrscr();
+                            gotoxy(0,0);
+                            printf("Error, invalid file size. %s.txt -> %d chars\n", txtFileName, file_size);
+                            printf("Press ENTER to continue...\n");
+                            while(get_char() != ENTER) msleep(10);
+                            fclose(pont_arq);
+                            return false;
+                        }
+                        *rd_ptr++ = read;
+                        file_size++;
                     }
-                    //TODO: return COLUMN size
-                    // verify array size before writing it
-
-                    //if (read == '\n' && j == 0) j = i;
-
-                    //if(j < columns){
-					//	matrixObject[(i*columns) + j] = read;
-					//	//*matrixObject = read;
-					//	//matrixObject++;
-                    //    j++;
-                    //}
-                    //else{
-                    //    i++;
-                    //    j=0;
-                    //}
 				}
 			}
 			fclose(pont_arq);
-
-            //clrscr();
-            //gotoxy(0,0);
-            //printf("%s, %d, %d", txtFileName, i, j);
-			//fflush(stdout);
-			//char user_input = 0;
-			//clrbuf();
-			//while(user_input != ENTER)
-			//{
-			//	if (kbhit()){
-			//		user_input = get_char();
-            //    }
-			//	msleep(10);
-			//}
 		}
 		else{
 			clrscr();
@@ -1622,19 +1590,6 @@ bool readTxtFiles(char matrixObject[], int columns, char txtFileName[]){
 
     return true;
 }
-
-//double time_diff(uint64_t startTime){
-//    static LARGE_INTEGER freq;
-//    LARGE_INTEGER endTime;
-//
-//    if(freq.QuadPart == 0){ //just read the frequency one time
-//        QueryPerformanceFrequency(&freq);
-//    }
-//
-//    QueryPerformanceCounter(&endTime);
-//    return 1000*( (double)(endTime.QuadPart - startTime)/ freq.QuadPart );  //milisegundos
-//
-//}
 
 bool keyHitControl(uint64_t startTime, double delay){
     //double time_difference= time_diff(startTime, clock());

@@ -61,8 +61,8 @@ char get_char();
 #define FILE_SEPARATOR "\\\\"
 #define msleep(a) Sleep(a)
 #define clrscr() system("cls")
-#define clrbuf() fflush(stdin)
-#define close_serial_port(a) CloseHandle(a)
+//#define clrbuf() fflush(stdin)
+//#define close_serial_port(a) CloseHandle(a)
 //#define _NULL NULL
 
 // ASCII keys
@@ -91,12 +91,11 @@ char get_char();
  *********************************************/
 
 // Miscellaneous
-#define INVALID_HANDLE_VALUE -1
 #define FILE_SEPARATOR "/"
 #define msleep(a) for(int ii = 0; ii < 1000; ii++) {usleep(a);}
-#define close_serial_port(a) close(a)
+//#define close_serial_port(a) close(a)
 #define clrscr() system("clear")
-#define clrbuf() __fpurge(stdin)
+//#define clrbuf() __fpurge(stdin)
 
 // ASCII keys
 #define UP 65
@@ -112,8 +111,6 @@ char get_char();
  * LINUX Typedefs
  *********************************************/
 
-typedef uint8_t BOOL;
-typedef int HANDLE;
 
 /**********************************************
  * LINUX Function Prototypes
