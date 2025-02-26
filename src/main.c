@@ -414,7 +414,7 @@ int main(void){
     system("MODE con cols=82 lines=36");
 #else
     set_nonblock(1);
-    //hide_cursor(1);
+    hide_cursor(1);
     system("echo -ne '\e[8;36;82t'");
 #endif
 
@@ -432,6 +432,8 @@ int main(void){
     set_nonblock(0);
     hide_cursor(0);
     system("echo -ne '\e[8;24;80t'");
+    //TODO:
+    //printf("\x1b[0m");
 #endif
 
     clrscr();
@@ -506,7 +508,7 @@ void writeHightScores(){
 		fclose(pont_arq);
 	}
 	else{
-        
+
 		clrscr();
         gotoxy(0,0);
         printf("Error in saving: %s.bin\n", HIGHSCORES_FILE);
@@ -550,8 +552,12 @@ bool highscoresPrompt(){
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
         gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
         //fflush(stdin);
+        set_nonblock(0);
+        hide_cursor(0);
         fgets(player.name, HIGHSCORES_MAX_PLAYER_NAME, stdin);
         player.name[strlen(player.name)-1] = '\0'; //take out the \n
+        set_nonblock(1);
+        hide_cursor(1);
         return true;
     }
     return false;
@@ -696,8 +702,6 @@ void printBackground(char background[], int rows, int columns, int startRow, int
 void mainMenu(){
 	bool endMenu = false;
 	int option;
-	//hide_cursor(true);
-
 
 	while (!endMenu){
 		printBackground(backGround.mainMenu  , MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, 0, 0);
@@ -718,6 +722,7 @@ void mainMenu(){
 				endMenu = true;
 			}
 		}
+        msleep(10);
 	}
 
 }
@@ -758,12 +763,25 @@ void optionsMenu(){
             case 1: {
                 //gets the selection of theme
                 theme = symbolMenuMovement(initialX2, 38, 19, 25, 2,symbX);
-                //switch(theme){
-                //    case light: system("Color 71"); player.theme = light; break;//light //x=19, y=38
-                //    case vanilla: system("Color 07"); player.theme = vanilla; break; //vanilla //x=21, y=38
-                //    case dark: system("color 06"); player.theme = dark; break; //dark //x=23, y=38
-                //    case matrix: system("Color 0A"); player.theme = matrix; break; //martix //x=25, y=38
-                //}
+                if (WINDOWS_EN)
+                {
+                    switch(theme){
+                        case light   : system("Color 71"); player.theme = light; break;//light //x=19, y=38
+                        case vanilla : system("Color 07"); player.theme = vanilla; break; //vanilla //x=21, y=38
+                        case dark    : system("color 06"); player.theme = dark; break; //dark //x=23, y=38
+                        case matrix  : system("Color 0A"); player.theme = matrix; break; //martix //x=25, y=38
+                    }
+                }
+                else
+                {
+                    // ANSI color codes
+                    switch(theme){
+                        case light   : printf("\e[47m \e[1;34m"); player.theme = light; break;//light //x=19, y=38
+                        case vanilla : printf("\x1b[0m"); player.theme = vanilla; break; //vanilla //x=21, y=38
+                        case dark    : printf("\x1b[33m"); player.theme = dark; break; //dark //x=23, y=38
+                        case matrix  : printf("\e[1;92m"); player.theme = matrix; break; //martix //x=25, y=38
+                    }
+                }
             } break;
             case ESC: endMenu = true; break;
         }
@@ -882,8 +900,9 @@ void gameLoop(){
                     spentTime =  setQuitGamePrompt(prompt.quitGamePrompt);
                     //update time
                     arrow.startTimeKeyHitLimit += spentTime;
-                    switch(preset.levelType){
+                    switch((int)preset.levelType){
                         case monsterLevel: monster.startTimeSpawn += spentTime; break;
+                        default: break;
                     }
                 }  break;
             }
