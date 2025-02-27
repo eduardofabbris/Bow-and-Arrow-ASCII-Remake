@@ -465,9 +465,8 @@ int main(void){
     system("echo -ne '\e[8;36;82t'");
 #endif
 
-	if(loadFiles()){
+    if(loadFiles()){
         readHighScores();
-        //MENU
         mainMenu();
     }
 
@@ -482,7 +481,7 @@ int main(void){
 #endif
 
     clrscr();
-	return 0;
+    return 0;
 }
 //**************************************************************************************
 
@@ -491,7 +490,7 @@ int main(void){
  * @retval True if success
  */
 bool loadFiles(){
-	if( !readTxtFiles(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_FILE) ||
+    if( !readTxtFiles(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_FILE) ||
         !readTxtFiles(backGround.mainMenu, MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, MAIN_MENU_FILE) ||
         !readTxtFiles(backGround.highScores, HIGHSCORES_MENU_ROWS, HIGHSCORES_MENU_COLUMNS, HIGHSCORES_MENU_FILE) ||
         !readTxtFiles(backGround.game, CANVAS_ROWS, CANVAS_COLUMNS, CANVAS_SKIN_FILE) ||
@@ -503,8 +502,8 @@ bool loadFiles(){
         !readTxtFiles(prompt.gameoverPrompt, GAMEOVER_PROMPT_ROWS,  GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_FILE) ||
         !readTxtFiles(prompt.quitGamePrompt, QUITGAME_PROMPT_ROWS, QUITGAME_PROMPT_COLUMNS, QUITGAME_PROMPT_FILE) ){
 
-		return false;
-	}
+        return false;
+    }
     return true;
 }
 //**************************************************************************************
@@ -514,27 +513,27 @@ bool loadFiles(){
  * @retval True if success
  */
 bool readHighScores(){
-	FILE *pont_arq;
+    FILE *pont_arq;
     char buf[100];
-	int i=0;
+    int i=0;
 
     snprintf(buf, sizeof(buf),"score%s%s.bin", FILE_SEPARATOR, HIGHSCORES_FILE);
-	pont_arq = fopen(buf, "rb");
+    pont_arq = fopen(buf, "rb");
 
     if(pont_arq){
-		while(!feof(pont_arq)){
-			if(fread(&highScore.player[i], sizeof(highScore.player[0]), 1, pont_arq)){
+        while(!feof(pont_arq)){
+            if(fread(&highScore.player[i], sizeof(highScore.player[0]), 1, pont_arq)){
                 i++;
-			}
-		}
-		fclose(pont_arq);
+            }
+        }
+        fclose(pont_arq);
         highScore.index = i;
-	}
-	else{
+    }
+    else{
         // Failed to read highsocres
         return false;
-	}
-	return true;
+    }
+    return true;
 }
 //**************************************************************************************
 
@@ -543,9 +542,9 @@ bool readHighScores(){
  * @retval None
  */
 void writeHightScores(){
-	FILE *pont_arq;
+    FILE *pont_arq;
     char buf[100];
-	int i;
+    int i;
 
     if(WINDOWS_EN)
     {
@@ -556,22 +555,22 @@ void writeHightScores(){
         system("mkdir -p score");
     }
     snprintf(buf, sizeof(buf),"score%s%s.bin", FILE_SEPARATOR, HIGHSCORES_FILE);
-	pont_arq = fopen(buf, "wb");
-	if(pont_arq){
-		for(i = 0; i < highScore.index; i++){
-			fwrite(&highScore.player[i], sizeof(highScore.player[0]), 1, pont_arq);
-		}
-		fclose(pont_arq);
-	}
-	else{
+    pont_arq = fopen(buf, "wb");
+    if(pont_arq){
+        for(i = 0; i < highScore.index; i++){
+            fwrite(&highScore.player[i], sizeof(highScore.player[0]), 1, pont_arq);
+        }
+        fclose(pont_arq);
+    }
+    else{
 
-		clrscr();
+        clrscr();
         gotoxy(0,0);
         printf("Error in saving: %s.bin\n", HIGHSCORES_FILE);
         printf("Press ENTER to continue...\n");
         fflush(stdout);
         while(get_char() != ENTER) msleep(10);
-	}
+    }
 }
 //**************************************************************************************
 
@@ -581,7 +580,7 @@ void writeHightScores(){
  */
 void highscoresMenu(){
 
-	clrscr();
+    clrscr();
     printBackground(backGround.highScores, HIGHSCORES_MENU_ROWS, HIGHSCORES_MENU_COLUMNS, HIGHSCORES_MENU_X, HIGHSCORES_MENU_Y);
         for(int i = 0; i < highScore.index; i++){
             gotoxy((HIGHSCORES_MENU_X + 5) + i, HIGHSCORES_MENU_Y + 9); printf("%s", highScore.player[i].name);
@@ -613,7 +612,7 @@ bool highscoresPrompt(){
     }
 
     if(print){
-		clrscr();
+        clrscr();
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
         gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
         set_nonblock(0);
@@ -694,52 +693,52 @@ void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
  * @retval The selected option index starting from zero
  */
 int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLimitX, int leap, enum symbolType symbol){
-	char key = 0;
+    char key = 0;
 
-	int i = initialX;
-	int j = initialY;
+    int i = initialX;
+    int j = initialY;
 
     // print arrow initial position
     if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);
 
-	while(key != ENTER){
-		if(kbhit()){
-			key = get_char();
+    while(key != ENTER){
+        if(kbhit()){
+            key = get_char();
             // clear symbol
             if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);
             else if(symbol == symbX) printSymbolMenu(true, i, j, symbX);
 
-			switch (key){
+            switch (key){
                 case 'w': case 'W': case UP:{
-					if(i > upperLimitX ){ // height limit
-						i -= leap; // up 1
-					}
-					else{ // i = upperLimitX
-						i = bottomLimitX;
-					}
-				} break;
+                    if(i > upperLimitX ){ // height limit
+                        i -= leap; // up 1
+                    }
+                    else{ // i = upperLimitX
+                        i = bottomLimitX;
+                    }
+                } break;
                 case 's': case 'S': case DOWN:{
-					if(i < bottomLimitX){ // bottom limit
-						i += leap; // down 1
-					}
-					else{ // i = bottomLimitX
-						i = upperLimitX;
-					}
-				} break;
+                    if(i < bottomLimitX){ // bottom limit
+                        i += leap; // down 1
+                    }
+                    else{ // i = bottomLimitX
+                        i = upperLimitX;
+                    }
+                } break;
                 case ESC: return ESC;
-			}
+            }
             // reprint symbol
             if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);
             else if(symbol == symbX) printSymbolMenu(false, i, j, symbX);
 
-		}
+        }
 
-	}
+    }
 
     // clear final position after the selection
     if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);//arrow
 
-	return ((i - upperLimitX)/leap);
+    return ((i - upperLimitX)/leap);
 }
 //**************************************************************************************
 
@@ -749,17 +748,17 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
  */
 void printBackground(char background[], int rows, int columns, int startRow, int StartColumn){
 
-	char ch = 0;
-	clrscr();
-	for(int i = 0; i < rows; i++){
-		for(int j = 0; j < columns; j++){
-			ch = background[ (i * columns) + j];
-			if(ch != '\0'){
-				gotoxy((i + startRow),(j + StartColumn));
-				printf("%c", ch);
-			}
-		}
-	}
+    char ch = 0;
+    clrscr();
+    for(int i = 0; i < rows; i++){
+        for(int j = 0; j < columns; j++){
+            ch = background[ (i * columns) + j];
+            if(ch != '\0'){
+                gotoxy((i + startRow),(j + StartColumn));
+                printf("%c", ch);
+            }
+        }
+    }
     // force terminal output update
     fflush(stdout);
 }
@@ -770,33 +769,33 @@ void printBackground(char background[], int rows, int columns, int startRow, int
  * @retval None
  */
 void mainMenu(){
-	bool endMenu = false;
-	int option;
+    bool endMenu = false;
+    int option;
 
-	while (!endMenu){
-		printBackground(backGround.mainMenu  , MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, 0, 0);
-		option = symbolMenuMovement(ARROW_MAIN_MENU_INITIAL_POSITION_X, ARROW_MAIN_MENU_INITIAL_POSITION_Y, ARROW_MAIN_MENU_UPPER_LIMIT_X, ARROW_MAIN_MENU_BOTTOM_LIMIT_X, 1, symbArrow);
+    while (!endMenu){
+        printBackground(backGround.mainMenu  , MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, 0, 0);
+        option = symbolMenuMovement(ARROW_MAIN_MENU_INITIAL_POSITION_X, ARROW_MAIN_MENU_INITIAL_POSITION_Y, ARROW_MAIN_MENU_UPPER_LIMIT_X, ARROW_MAIN_MENU_BOTTOM_LIMIT_X, 1, symbArrow);
 
-		switch(option){
+        switch(option){
              // play
-			case 0:{
-				gameLoop();
-			} break;
+            case 0:{
+                gameLoop();
+            } break;
              // options
-			case 1:{
+            case 1:{
                 optionsMenu();
-			} break;
+            } break;
              // best scores
-			case 2:{
+            case 2:{
                 highscoresMenu();
-			} break;
+            } break;
             // quit
-			case 3: case ESC: {
-				endMenu = true;
-			}
-		}
+            case 3: case ESC: {
+                endMenu = true;
+            }
+        }
         msleep(10);
-	}
+    }
 }
 //**************************************************************************************
 
@@ -1091,7 +1090,7 @@ uint64_t setQuitGamePrompt(char prompt[]){
  * @retval None
  */
 void setGameOver(char prompt[]){
-	clrscr();
+    clrscr();
     // balloon
     printPrompt(prompt, GAMEOVER_PROMPT_ROWS, GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_X, GAMEOVER_PROMPT_Y, false);
     gotoxy(11,41); printf("%03i", player.balloonsDestroyed);
@@ -1725,16 +1724,16 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
  */
 bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
     char buf[100];
-	FILE *pont_arq;
-	char read;
-	int file_size = 0;
+    FILE *pont_arq;
+    char read;
+    int file_size = 0;
     char *rd_ptr = matrixObject;
 
         snprintf(buf, sizeof(buf),"ascii_art%s%s.txt", FILE_SEPARATOR, txtFileName);
-		pont_arq = fopen(buf, "r");
-		if(pont_arq){
-			while(feof(pont_arq) == false){
-				if(fread(&read, sizeof(char), 1, pont_arq)){
+        pont_arq = fopen(buf, "r");
+        if(pont_arq){
+            while(feof(pont_arq) == false){
+                if(fread(&read, sizeof(char), 1, pont_arq)){
                     if (read != '\n' && read != '\r')
                     {
                         // Check file size
@@ -1751,18 +1750,18 @@ bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
                         *rd_ptr++ = read;
                         file_size++;
                     }
-				}
-			}
-			fclose(pont_arq);
-		}
-		else{
-			clrscr();
+                }
+            }
+            fclose(pont_arq);
+        }
+        else{
+            clrscr();
             gotoxy(0,0);
             printf("Error in the opening of: %s.txt\n", txtFileName);
             printf("Press ENTER to continue...\n");
             while(get_char() != ENTER) msleep(10);
             return false;
-		}
+        }
 
     return true;
 }
@@ -1788,13 +1787,13 @@ bool keyHitControl(uint64_t startTime, double delay){
  */
 bool staggerControl(uint64_t *startTime, double delay){
 
-	if(time_diff(*startTime) >= delay){
+    if(time_diff(*startTime) >= delay){
         *startTime = get_clock();
-		return false;
-	}
-	else{
-		return true;
-	}
+        return false;
+    }
+    else{
+        return true;
+    }
 }
 //**************************************************************************************
 
