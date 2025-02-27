@@ -2,10 +2,19 @@
 * @filename: util.h
 * @brief: util.c header
 
-* MIT License
+*  Copyright 2025 eduardofabbris
 *
-* Copyright (c) 2024 eduardofabbris
-* See the LICENSE file for details.
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
 ********************************************************************************/
 #ifndef UTIL_H
 #define UTIL_H
@@ -61,9 +70,6 @@ char get_char();
 #define FILE_SEPARATOR "\\\\"
 #define msleep(a) Sleep(a)
 #define clrscr() system("cls")
-//#define clrbuf() fflush(stdin)
-//#define close_serial_port(a) CloseHandle(a)
-//#define _NULL NULL
 
 // ASCII keys
 #define UP 72
@@ -93,9 +99,7 @@ char get_char();
 // Miscellaneous
 #define FILE_SEPARATOR "/"
 #define msleep(a) for(int ii = 0; ii < 1000; ii++) {usleep(a);}
-//#define close_serial_port(a) close(a)
 #define clrscr() system("clear")
-//#define clrbuf() __fpurge(stdin)
 
 // ASCII keys
 #define UP 65

@@ -1,78 +1,100 @@
-/* BOW AND ARROW - Ascii Art Remake
- * Made by: Eduardo Fabbris
- */
+/*******************************************************************************
+* @filename: main.c
+* @brief: Bow and arrow ASCII Art adaptation
+*
+*  Copyright 2025 eduardofabbris
+*
+*  Licensed under the Apache License, Version 2.0 (the "License");
+*  you may not use this file except in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+********************************************************************************/
+
+/**********************************************
+ * Includes
+ *********************************************/
 #include "include/util.h"
 #include <stdbool.h>
 
-//Keys
-#define SPACE 32 //32 = space in ascii
-#define ESC 27   //27 = esc in ascci
+/**********************************************
+ * Defines
+ *********************************************/
 
-// Special Use
+// ----------- KEYS -----------
+#define SPACE 32
+#define ESC 27
+
+// ----------- DEBUG -----------
 #define DEBUG_MODE 0
 
-/**********STANDARD PRESETS**********/
-
+// ----------- MISC PRESETS -----------
 #define MAX_LEVEL 27
 #define FPS_LIMIT 120
 
-//arrow
+// arrow
 #define MAX_ARROW_QUANTITY 30
 #define ARROW_LEFT_POINTS 50
-//balloon
+// balloon
 #define BALLOON_QUANTITY 15
 #define BALLOON_ARROW_QUANTITY 15
 #define BALLOON_POINTS 100
-//monster
+// monster
 #define MONSTER_QUANTITY 30
 #define MONSTER_ARROW_QUANTITY 30
 #define MONSTER_POINTS 200
 
-/**********DIFFICULTY PRESETS**********/
+// ----------- DIFFICULTY PRESETS -----------
 
-/***********EASY***********/
-//archer
-#define E_ARCHER_HIT_DELAY 25//ms
-//arrow
-#define E_ARROW_STAGGER_DELAY 30//ms
-#define E_ARROW_HIT_DELAY 250 //ms
-//balloon
+// ------ EASY ------
+// archer
+#define E_ARCHER_HIT_DELAY 25 // ms
+// arrow
+#define E_ARROW_STAGGER_DELAY 30 // ms
+#define E_ARROW_HIT_DELAY 250 // ms
+// balloon
 #define E_BALLOON_STAGGER_DELAY 300
 #define E_BALLOON_SCATTERED_DELAY_MAX 300
 #define E_BALLOON_SCATTERED_DELAY_MIN 60
-//monster
-#define E_MONSTER_STAGGER_DELAY 100 //ms
-#define E_MONSTER_SPAWN_DELAY 3000 //ms
+// monster
+#define E_MONSTER_STAGGER_DELAY 100 // ms
+#define E_MONSTER_SPAWN_DELAY 3000 // ms
 
-/**********NORMAL**********/
-//archer
-#define M_ARCHER_HIT_DELAY 50//ms
-//arrow
-#define M_ARROW_STAGGER_DELAY 37.5//ms
-#define M_ARROW_HIT_DELAY 500 //ms
-//balloon
+// ------ NORMAL ------
+// archer
+#define M_ARCHER_HIT_DELAY 50 // ms
+// arrow
+#define M_ARROW_STAGGER_DELAY 37.5 // ms
+#define M_ARROW_HIT_DELAY 500 // ms
+// balloon
 #define M_BALLOON_STAGGER_DELAY 200
 #define M_BALLOON_SCATTERED_DELAY_MAX 300
 #define M_BALLOON_SCATTERED_DELAY_MIN 40
-//monster
-#define M_MONSTER_STAGGER_DELAY 50 //ms
-#define M_MONSTER_SPAWN_DELAY 2000 //ms
+// monster
+#define M_MONSTER_STAGGER_DELAY 50 // ms
+#define M_MONSTER_SPAWN_DELAY 2000 // ms
 
-/***********HARD***********/
-//archer
-#define H_ARCHER_HIT_DELAY 80//ms
-//arrow
-#define H_ARROW_STAGGER_DELAY 46//ms
-#define H_ARROW_HIT_DELAY 1000 //ms
-//balloon
+// ------ HARD ------
+// archer
+#define H_ARCHER_HIT_DELAY 80 // ms
+// arrow
+#define H_ARROW_STAGGER_DELAY 46 // ms
+#define H_ARROW_HIT_DELAY 1000 // ms
+// balloon
 #define H_BALLOON_STAGGER_DELAY 150
 #define H_BALLOON_SCATTERED_DELAY_MAX 120
 #define H_BALLOON_SCATTERED_DELAY_MIN 40
-//monster
-#define H_MONSTER_STAGGER_DELAY 40 //ms
-#define H_MONSTER_SPAWN_DELAY 1500 //ms
+// monster
+#define H_MONSTER_STAGGER_DELAY 40 // ms
+#define H_MONSTER_SPAWN_DELAY 1500 // ms
 
-/**********CANVAS**********/
+// ----------- CANVAS -----------
 #define CANVAS_SKIN_FILE "backgrounds" FILE_SEPARATOR "game"
 #define CANVAS_COLUMNS 81
 #define CANVAS_ROWS 35
@@ -82,13 +104,13 @@
 #define CANVAS_LOWER_EDGE_X 34
 #define CANVAS_MIDDLE_EDGE_X 4
 
-/**********ARROW**********/
+// ----------- ARROW -----------
 #define ARROW_SKIN_FILE "skins" FILE_SEPARATOR "arrow_skin"
 #define ARROW_COLUMNS 3
 #define ARROW_ROWS 1
 #define ARROW_RIGHT_LIMIT 77
 
-/**********ARCHER**********/
+// ----------- ARCHER -----------
 #define ARCHER_SKIN_FILE "skins" FILE_SEPARATOR "archer_skin"
 #define ARCHER_INITIAL_X 15
 #define ARCHER_INITIAL_Y 1
@@ -97,7 +119,7 @@
 #define ARCHER_COLUMNS 8
 #define ARCHER_ROWS 4
 
-/**********BALLOON**********/
+// ----------- BALLON -----------
 #define BALLOON_SKIN_FILE "skins" FILE_SEPARATOR "balloon_skin"
 #define BALLOON_COLUMNS 3
 #define BALLOON_ROWS 3
@@ -106,7 +128,7 @@
 #define BALLOON_ROW_INITIAL_X 26
 #define BALLOON_ROW_INITIAL_Y 18
 
-/**********MONSTER**********/
+// ----------- MONSTER -----------
 #define MONSTER_SKIN_FILE "skins" FILE_SEPARATOR "monster_skin"
 #define MONSTER_COLUMNS 6
 #define MONSTER_ROWS 5
@@ -116,50 +138,50 @@
 #define MONSTER_LEFT_LIMIT 1
 #define MONSTER_INITIAL_Y 80
 
-/**********ARROW_LEFT_DISPLAY**********/
+// ----------- ARROWS_LEFT_DISPLAY -----------
 #define ARROW__LEFT_DISPLAY_X 3
 #define ARROW__LEFT_DISPLAY_SYMBOL '|'
 
-/**********SCORE DISPLAY**********/
+// ----------- SCORE DISPLAY -----------
 #define SCORE_DISPLAY_X 2
 #define SCORE_DISPLAY_Y 8
 #define HIGHSCORE_DISPLAY_X 3
 #define HIGHSCORE_DISPLAY_Y 13
 
-/**********HIGH SCORES PROMPT**********/
+// ----------- HIGH SCORES PROMPT -----------
 #define HIGH_SCORES_PROMPT_ROWS 7
 #define HIGH_SCORES_PROMPT_COLUMNS 37
 #define HIGH_SCORES_PROMPT_X 10
 #define HIGH_SCORES_PROMPT_Y 24
 #define HIGH_SCORES_PROMPT_FILE "prompts" FILE_SEPARATOR "highscores_prompt"
 
-/**********GAMEOVER PROMPT**********/
+// ----------- GAMEOVER PROMPT -----------
 #define GAMEOVER_PROMPT_ROWS 15
 #define GAMEOVER_PROMPT_COLUMNS 65
 #define GAMEOVER_PROMPT_X 7
 #define GAMEOVER_PROMPT_Y 8
 #define GAMEOVER_PROMPT_FILE "prompts" FILE_SEPARATOR "gameover_prompt"
 
-/**********QUITGAME PROMPT**********/
+// ----------- QUITGAME PROMPT -----------
 #define QUITGAME_PROMPT_ROWS 7
 #define QUITGAME_PROMPT_COLUMNS 37
 #define QUITGAME_PROMPT_X 10
 #define QUITGAME_PROMPT_Y 24
 #define QUITGAME_PROMPT_FILE "prompts" FILE_SEPARATOR "quitgame_prompt"
 
-/**********HIGHSCORES MENU**********/
+// ----------- HIGHSCORES MENU -----------
 #define HIGHSCORES_MENU_ROWS 14
 #define HIGHSCORES_MENU_COLUMNS 53
 #define HIGHSCORES_MENU_X 7
 #define HIGHSCORES_MENU_Y 14
 #define HIGHSCORES_MENU_FILE "backgrounds" FILE_SEPARATOR "highscores_menu"
 
-/**********HIGHSCORES SAVE FILE**********/
+// ----------- HIGHSCORES SAVE FILE -----------
 #define HIGHSCORES_MAX_PLAYER_NAME 40
 #define HIGHSCORES_MAX_SAVED_SCORES 5
 #define HIGHSCORES_FILE "highscores"
 
-/**********OPTIONS MENU**********/
+// ----------- OPTIONS MENU -----------
 #define OPTIONS_MENU_ROWS 21
 #define OPTIONS_MENU_COLUMNS 70
 #define OPTIONS_MENU_X 7
@@ -170,7 +192,7 @@
 #define ARROW_OPTIONS_MENU_BOTTOM_LIMIT_X 19
 #define OPTIONS_MENU_FILE "backgrounds" FILE_SEPARATOR "options_menu"
 
-/**********MAIN MENU**********/
+// ----------- MAIN MENU -----------
 #define MAIN_MENU_COLUMNS 81
 #define MAIN_MENU_ROWS 35
 #define ARROW_MAIN_MENU_INITIAL_POSITION_X 17
@@ -180,10 +202,14 @@
 #define ARROW_MENU_COLUMNS 2
 #define MAIN_MENU_FILE "backgrounds" FILE_SEPARATOR "main_menu"
 
-/***************************************************************************/
+// ----------- LEVELS -----------
 #define N_LEVEL_TYPES 3
 
-//level type
+/**********************************************
+ * Enums
+ *********************************************/
+
+// level type
 enum levelType
 {
     balloonLevel = 1,
@@ -191,7 +217,7 @@ enum levelType
     balloonScatteredLevel
 };
 
-//difficulty
+// difficulty
 enum difficulty
 {
     easy,
@@ -199,7 +225,7 @@ enum difficulty
     hard
 };
 
-//themes
+// themes
 enum theme
 {
     light,
@@ -208,13 +234,16 @@ enum theme
     matrix
 };
 
-//symbol
+// symbol
 enum symbolType
 {
     symbArrow,
     symbX
 };
-/***************************************************************************/
+
+/*********************************************************
+* Typedefs
+*********************************************************/
 
 typedef struct fpsLimit
 {
@@ -226,17 +255,17 @@ typedef struct fpsLimit
 typedef struct preSets
 {
     enum levelType levelType;
-    //arrow
+    // arrow
     short arrowQuantity;
     short arrowStaggerDelay, arrowHitDelay;
     bool  arrowConsumableArrows;
-    //archer
+    // archer
     short archerHitDelay;
-    //balloon
+    // balloon
     short balloonInitialX;
     short balloonStaggerDelay;
     short balloonScatteredDelayMax, balloonScatteredDelayMin;
-    //monster
+    // monster
     short monsterStaggerDelay, monsterSpawnDelay;
 } PRESETS;
 
@@ -321,17 +350,20 @@ typedef struct Prompts
     char quitGamePrompt[QUITGAME_PROMPT_ROWS * QUITGAME_PROMPT_COLUMNS];
 } PROMPT;
 
-/********************************************FUNCTION DECLARATION********************************************/
-/*******SPECIAL FUNCTIONS*******/
+/*********************************************************
+* Function Prototypes
+*********************************************************/
+
+// ----------- DEBUG -----------
 void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printTags);
 
-/*******FILE FUNCTIONS*******/
+// ----------- FILE -----------
 bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]);
 bool loadFiles();
 bool readHighScores();
 void writeHightScores();
 
-/*******MENU/PROMPT FUNCTIONS*******/
+// ----------- MENU/PROMPT -----------
 int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLimitX, int leap, enum symbolType symbol);
 void mainMenu();
 void optionsMenu();
@@ -341,7 +373,7 @@ void rearrangeScores();
 uint64_t setQuitGamePrompt(char prompt[]);
 void setGameOver(char prompt[]);
 
-/********PRINT FUNCTIONS*******/
+// ----------- PRINT -----------
 void printBackground(char background[], int rows, int columns, int startRow, int StartColumn);
 void printPrompt(char prompt[], int rows, int columns, int startRow, int startColumn, bool clean);
 void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol);
@@ -349,39 +381,41 @@ void printNumberInGame(int value, int x, int y, char format[4]);
 void printStringInGame(char *string, int x, int y);
 void draw();
 
-/*******TIME FUNCTIONS*******/
+// ----------- TIME -----------
 bool keyHitControl(uint64_t startTime, double delay);
 bool staggerControl(uint64_t *startTime, double delay);
 void staggerControlScatteredBalloon(BALLOON *balloon);
 
-/*******GAME FUNCTIONS*******/
+// ----------- GAME -----------
 void gameLoop();
-//game screen
+// screen
 void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster);
-//movement
+// movement
 void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster);
-//level and difficulty
+// level and difficulty
 void setLevelPreset();
 void setDifficultyPreset();
-//archer
+// archer
 bool hitArcherDetector(ARCHER *archer, MONSTER *monster);
 void archerMovUp(ARCHER *archer);
 void archerMovDown(ARCHER *archer);
-//arrow
+// arrow
 void arrowShoot(ARCHER archer, ARROW *arrow);
-//balloon
+// balloon
 void setBalloonFirstRowPosition(BALLOON *balloon);
 void setBalloon(BALLOON *balloon, int  i, int startRow, int endRow, bool clean);
 void hitBalloonDetector(ARROW *arrow, BALLOON *balloon);
 void setBalloonScatteredPostition(BALLOON *balloon);
-//monster
+// monster
 void hitMonsterDetector(ARROW *arrow, MONSTER *monster);
 void setMonsterFirstPosition(MONSTER *monster);
 void setMonster(MONSTER *monster, int i, int startColumn, int endColumn, bool clean);
 bool spawnRateMonster(MONSTER *monster, double delay);
 
-/***************************************************************************/
-//GLOBAL VARIABLES
+/*********************************************************
+* Global Variables
+*********************************************************/
+
 char gameLayer[CANVAS_ROWS][CANVAS_COLUMNS];
 HIGHSCORES highScore;
 SKIN skin;
@@ -389,7 +423,7 @@ BACKGROUND backGround;
 PROMPT prompt;
 FPSLIMIT fps =
 {
-    .delay = (1000/(double)FPS_LIMIT), //ms
+    .delay = (1000/(double)FPS_LIMIT), // ms
     .frames = 0,
     .startTimeDelay = 0,
     .startTimeOneSecod = 0
@@ -415,6 +449,10 @@ PRESETS preset;
 * Function Definitions
 *********************************************************/
 
+/**
+* @brief  Main menu or code entry
+* @return Zero
+*/
 int main(void){
 
 // Initialize terminal
@@ -446,7 +484,12 @@ int main(void){
     clrscr();
 	return 0;
 }
+//**************************************************************************************
 
+/**
+ * @brief  Load ASCII Art from .txt files
+ * @retval True if success
+ */
 bool loadFiles(){
 	if( !readTxtFiles(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_FILE) ||
         !readTxtFiles(backGround.mainMenu, MAIN_MENU_ROWS, MAIN_MENU_COLUMNS, MAIN_MENU_FILE) ||
@@ -464,7 +507,12 @@ bool loadFiles(){
 	}
     return true;
 }
+//**************************************************************************************
 
+/**
+ * @brief  Read binary high scores save
+ * @retval True if success
+ */
 bool readHighScores(){
 	FILE *pont_arq;
     char buf[100];
@@ -483,16 +531,17 @@ bool readHighScores(){
         highScore.index = i;
 	}
 	else{
-		clrscr();
-        gotoxy(0,0);
-        printf("Error in the reading of: %s.bin\n", HIGHSCORES_FILE);
-        printf("Press ENTER to continue...\n");
-        while(get_char() != ENTER) msleep(10);
+        // Failed to read highsocres
         return false;
 	}
 	return true;
 }
+//**************************************************************************************
 
+/**
+ * @brief  Write binary high scores
+ * @retval None
+ */
 void writeHightScores(){
 	FILE *pont_arq;
     char buf[100];
@@ -524,7 +573,12 @@ void writeHightScores(){
         while(get_char() != ENTER) msleep(10);
 	}
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print high scores menu
+ * @retval None
+ */
 void highscoresMenu(){
 
 	clrscr();
@@ -542,7 +596,12 @@ void highscoresMenu(){
         msleep(10);
     } while(key != ESC);
 }
-//verify if the player score is greater than the ones in the highscores and print prompt
+//**************************************************************************************
+
+/**
+ * @brief  Verify new highsocre entry and get player name
+ * @retval True if player entered the high scores
+ */
 bool highscoresPrompt(){
     bool print = false;
     if(highScore.index < HIGHSCORES_MAX_SAVED_SCORES) highScore.index++;
@@ -567,12 +626,17 @@ bool highscoresPrompt(){
     }
     return false;
 }
-//update highscores
+//**************************************************************************************
+
+/**
+ * @brief  Rearrange high scores
+ * @retval None
+ */
 void rearrangeScores(){
     int i;
-    for(i=0 ; i < highScore.index ; i++){ //starts from the greater score
+    for(i=0 ; i < highScore.index ; i++){ // start from the greater score
         if(player.score > highScore.player[i].score){
-            //pull everyone one down starting from the end
+            // pull everyone down starting from the end
             for(int j=(highScore.index-1); j > i ; j--){
                 strcpy(highScore.player[j].name, highScore.player[j-1].name);
                 highScore.player[j].score = highScore.player[j-1].score;
@@ -580,11 +644,16 @@ void rearrangeScores(){
             break;
         }
     }
-    //replace score
+    // replace score
     strcpy(highScore.player[i].name, player.name);
     highScore.player[i].score = player.score;
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print symbol from a menu
+ * @retval None
+ */
 void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
 
     switch(symbol){
@@ -597,7 +666,7 @@ void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
                     printf(" ");
                 }
             }
-            else{ //clean = false
+            else{
                 for(i = 0; i < ARROW_MENU_COLUMNS; i++){
                     printf("%c", arrow[i]);
                 }
@@ -610,7 +679,7 @@ void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
             if(clean){
                 printf(" ");
             }
-            else{ //clean = false
+            else{
                 printf("%c", symbolX);
             }
         } break;
@@ -618,35 +687,40 @@ void printSymbolMenu(bool clean, int x, int y, enum symbolType symbol){
     fflush(stdout);
 
 }
+//**************************************************************************************
 
+/**
+ * @brief  Handle a menu symbol movement
+ * @retval The selected option index starting from zero
+ */
 int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLimitX, int leap, enum symbolType symbol){
 	char key = 0;
 
 	int i = initialX;
 	int j = initialY;
-    //print initial position
-    if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);//arrow
 
-    //menu movement
+    // print arrow initial position
+    if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);
+
 	while(key != ENTER){
 		if(kbhit()){
 			key = get_char();
-            //clean symbol
+            // clear symbol
             if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);
             else if(symbol == symbX) printSymbolMenu(true, i, j, symbX);
-            //update the coords
+
 			switch (key){
                 case 'w': case 'W': case UP:{
-					if(i > upperLimitX ){ //height limit
-						i -= leap; //up 1
+					if(i > upperLimitX ){ // height limit
+						i -= leap; // up 1
 					}
 					else{ // i = upperLimitX
 						i = bottomLimitX;
 					}
 				} break;
                 case 's': case 'S': case DOWN:{
-					if(i < bottomLimitX){ //bottom limit
-						i += leap; //down 1
+					if(i < bottomLimitX){ // bottom limit
+						i += leap; // down 1
 					}
 					else{ // i = bottomLimitX
 						i = upperLimitX;
@@ -654,7 +728,7 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
 				} break;
                 case ESC: return ESC;
 			}
-            //reprint symbol
+            // reprint symbol
             if(symbol == symbArrow) printSymbolMenu(false, i, j, symbArrow);
             else if(symbol == symbX) printSymbolMenu(false, i, j, symbX);
 
@@ -665,9 +739,14 @@ int symbolMenuMovement(int initialX, int initialY, int upperLimitX, int bottomLi
     // clear final position after the selection
     if(symbol == symbArrow) printSymbolMenu(true, i, j, symbArrow);//arrow
 
-	return ((i - upperLimitX)/leap); //return the option starting at 0
+	return ((i - upperLimitX)/leap);
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print background
+ * @retval None
+ */
 void printBackground(char background[], int rows, int columns, int startRow, int StartColumn){
 
 	char ch = 0;
@@ -684,8 +763,12 @@ void printBackground(char background[], int rows, int columns, int startRow, int
     // force terminal output update
     fflush(stdout);
 }
+//**************************************************************************************
 
-/*************************@MAIN_MENU_CODE**************************************/
+/**
+ * @brief  Main menu selection
+ * @retval None
+ */
 void mainMenu(){
 	bool endMenu = false;
 	int option;
@@ -695,25 +778,32 @@ void mainMenu(){
 		option = symbolMenuMovement(ARROW_MAIN_MENU_INITIAL_POSITION_X, ARROW_MAIN_MENU_INITIAL_POSITION_Y, ARROW_MAIN_MENU_UPPER_LIMIT_X, ARROW_MAIN_MENU_BOTTOM_LIMIT_X, 1, symbArrow);
 
 		switch(option){
-			case 0:{ //play
+             // play
+			case 0:{
 				gameLoop();
 			} break;
-			case 1:{ //options
+             // options
+			case 1:{
                 optionsMenu();
 			} break;
-			case 2:{ //best scores
+             // best scores
+			case 2:{
                 highscoresMenu();
 			} break;
-			case 3: case ESC: {// quit
-				gotoxy(35, 1); //in case of appearing a terminal message
+            // quit
+			case 3: case ESC: {
 				endMenu = true;
 			}
 		}
         msleep(10);
 	}
-
 }
+//**************************************************************************************
 
+/**
+ * @brief  Options menu selection
+ * @retval None
+ */
 void optionsMenu(){
     enum difficulty difficulty;
     enum theme theme;
@@ -723,50 +813,52 @@ void optionsMenu(){
 
     while(!endMenu){
         printBackground(backGround.optionsMenu, OPTIONS_MENU_ROWS, OPTIONS_MENU_COLUMNS, OPTIONS_MENU_X, OPTIONS_MENU_Y);
-        //print the already set difficulty or theme
+        // print the already set difficulty or theme
         switch(player.difficulty){
-            case easy: initialX1 = 12; printSymbolMenu(false, initialX1, 38, symbX); break;
-            case normal: initialX1 = 14; printSymbolMenu(false, initialX1, 38, symbX); break;
-            case hard: initialX1 = 16; printSymbolMenu(false, initialX1, 38, symbX); break;
+            case easy   : initialX1 = 12; printSymbolMenu(false, initialX1, 38, symbX); break;
+            case normal : initialX1 = 14; printSymbolMenu(false, initialX1, 38, symbX); break;
+            case hard   : initialX1 = 16; printSymbolMenu(false, initialX1, 38, symbX); break;
         }
         switch(player.theme){
-            case light: initialX2 = 19; printSymbolMenu(false, initialX2, 38, symbX); break;
-            case vanilla: initialX2 = 21; printSymbolMenu(false, initialX2, 38, symbX); break;
-            case dark: initialX2 = 23; printSymbolMenu(false, initialX2, 38, symbX); break;
-            case matrix: initialX2 = 25; printSymbolMenu(false, initialX2, 38, symbX); break;
+            case light   : initialX2 = 19; printSymbolMenu(false, initialX2, 38, symbX); break;
+            case vanilla : initialX2 = 21; printSymbolMenu(false, initialX2, 38, symbX); break;
+            case dark    : initialX2 = 23; printSymbolMenu(false, initialX2, 38, symbX); break;
+            case matrix  : initialX2 = 25; printSymbolMenu(false, initialX2, 38, symbX); break;
         }
-        //gets the selection between difficulty and theme
-        option = symbolMenuMovement(ARROW_OPTIONS_MENU_INITIAL_X, ARROW_OPTIONS_MENU_INITIAL_Y, ARROW_OPTIONS_MENU_UPPER_LIMIT_X, ARROW_OPTIONS_MENU_BOTTOM_LIMIT_X, 7, symbArrow);
+
+        // get the selection between difficulty and theme
+        option = symbolMenuMovement(ARROW_OPTIONS_MENU_INITIAL_X, ARROW_OPTIONS_MENU_INITIAL_Y,
+                                    ARROW_OPTIONS_MENU_UPPER_LIMIT_X, ARROW_OPTIONS_MENU_BOTTOM_LIMIT_X, 7, symbArrow);
         switch(option){
+            // get the difficulty selection
             case 0: {
-                //gets the selection of difficulty
                 difficulty = symbolMenuMovement(initialX1, 38, 12, 16, 2, symbX);
                 switch(difficulty){
-                    case easy: player.difficulty = easy; break; //x= 12, y=38
-                    case normal: player.difficulty = normal; break;// x=14, y=38
-                    case hard: player.difficulty = hard; break;// x=16, y=38
+                    case easy   : player.difficulty = easy; break;   // x=12, y=38
+                    case normal : player.difficulty = normal; break; // x=14, y=38
+                    case hard   : player.difficulty = hard; break;   // x=16, y=38
                 }
             } break;
+            // get the theme selection
             case 1: {
-                //gets the selection of theme
                 theme = symbolMenuMovement(initialX2, 38, 19, 25, 2,symbX);
                 if (WINDOWS_EN)
                 {
                     switch(theme){
-                        case light   : system("Color 71"); player.theme = light; break;//light //x=19, y=38
-                        case vanilla : system("Color 07"); player.theme = vanilla; break; //vanilla //x=21, y=38
-                        case dark    : system("color 06"); player.theme = dark; break; //dark //x=23, y=38
-                        case matrix  : system("Color 0A"); player.theme = matrix; break; //martix //x=25, y=38
+                        case light   : system("Color 71"); player.theme = light; break;   // x=19, y=38
+                        case vanilla : system("Color 07"); player.theme = vanilla; break; // x=21, y=38
+                        case dark    : system("color 06"); player.theme = dark; break;    // x=23, y=38
+                        case matrix  : system("Color 0A"); player.theme = matrix; break;  // x=25, y=38
                     }
                 }
                 else
                 {
                     // ANSI color codes
                     switch(theme){
-                        case light   : printf("\e[47m \e[1;34m"); player.theme = light; break;//light //x=19, y=38
-                        case vanilla : printf("\x1b[0m"); player.theme = vanilla; break; //vanilla //x=21, y=38
-                        case dark    : printf("\x1b[33m"); player.theme = dark; break; //dark //x=23, y=38
-                        case matrix  : printf("\e[1;92m"); player.theme = matrix; break; //martix //x=25, y=38
+                        case light   : printf("\e[47m \e[1;34m"); player.theme = light; break; // x=19, y=38
+                        case vanilla : printf("\x1b[0m"); player.theme = vanilla; break;       // x=21, y=38
+                        case dark    : printf("\x1b[33m"); player.theme = dark; break;         // x=23, y=38
+                        case matrix  : printf("\e[1;92m"); player.theme = matrix; break;       // x=25, y=38
                     }
                 }
             } break;
@@ -774,13 +866,12 @@ void optionsMenu(){
         }
     }
 }
+//**************************************************************************************
 
-
-/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                                    @GAME_PRINCIPAL_CODE
+/**
+ * @brief  Game loop
+ * @retval None
  */
-//note: if you have '\0' in your matrix, it's not going to do spaces!! <- use gotoxy
-
 void gameLoop(){
     int key = 0;
 
@@ -821,9 +912,9 @@ void gameLoop(){
                         .startTimeSpawn = 0 };
 
 
-    //just need to execute one time
+    // just need to execute one time
     if(player.level == 1){
-        //reset archer position and state
+        // reset archer position and state
         archer.active = true;
         archer.x = ARCHER_INITIAL_X;
         archer.y = ARCHER_INITIAL_Y;
@@ -831,14 +922,16 @@ void gameLoop(){
         printBackground(backGround.game, CANVAS_ROWS, CANVAS_COLUMNS, 0, 0);
         printNumberInGame(highScore.player[0].score, HIGHSCORE_DISPLAY_X, HIGHSCORE_DISPLAY_Y, "%06i");
     }
+    // print score
     printNumberInGame(player.score, SCORE_DISPLAY_X, SCORE_DISPLAY_Y, "%06i");
-    printNumberInGame(player.level, 2, 39, "%03i"); //print the level number
+    // print the level number
+    printNumberInGame(player.level, 2, 39, "%03i");
     setLevelPreset();
 
-    //SPECIAL INTERFACE
     #if DEBUG_MODE
         specialInterface(arrow, balloon, monster, true);
-    #else //print arrows left
+    // print arrows left
+    #else
         for(int i=0; i < MAX_ARROW_QUANTITY; i++){ //erase arrows left
             gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-MAX_ARROW_QUANTITY)+ i] = ' ';
         }
@@ -865,12 +958,11 @@ void gameLoop(){
         } break;
     }
 
-    //time
+    // time
     #if DEBUG_MODE
         fps.startTimeOneSecod = get_clock();
     #endif
     fps.startTimeDelay = arrow.startTimeStagger = get_clock();
-    //getchar();
     while(!player.gameOver && !player.levelOver) {
         show(&archer, &arrow, &balloon, &monster);
 
@@ -882,10 +974,10 @@ void gameLoop(){
                 case 's': case 'S': case DOWN: archerMovDown(&archer); break;
                 case SPACE: arrowShoot(archer, &arrow); break;
                 case ESC:{
-                    //PAUSE MENU
+                    // PAUSE MENU
                     uint64_t spentTime;
                     spentTime =  setQuitGamePrompt(prompt.quitGamePrompt);
-                    //update time
+                    // Update time
                     arrow.startTimeKeyHitLimit += spentTime;
                     switch((int)preset.levelType){
                         case monsterLevel: monster.startTimeSpawn += spentTime; break;
@@ -912,7 +1004,6 @@ void gameLoop(){
             }
         }
 
-        //SPECIAL INTERFACE
         #if DEBUG_MODE
             specialInterface(arrow, balloon, monster, false);
         #endif
@@ -929,15 +1020,22 @@ void gameLoop(){
         }
     }
     else{
-        setGameOver(prompt.gameoverPrompt); //reset player status
+         // reset player status
+        setGameOver(prompt.gameoverPrompt);
         if(highscoresPrompt()){
             rearrangeScores();
             writeHightScores();
         }
-        player.score = 0; //reset player score
+         // reset player score
+        player.score = 0;
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print a prompt
+ * @retval None
+ */
 void printPrompt(char prompt[], int rows, int columns, int startRow, int startColumn, bool clean){
 
     if(!clean){
@@ -958,7 +1056,12 @@ void printPrompt(char prompt[], int rows, int columns, int startRow, int startCo
     }
     fflush(stdout);
 }
+//**************************************************************************************
 
+/**
+ * @brief  Quit game prompt
+ * @retval The time the game was paused
+ */
 uint64_t setQuitGamePrompt(char prompt[]){
     uint64_t startTime, endTime;
 
@@ -978,31 +1081,36 @@ uint64_t setQuitGamePrompt(char prompt[]){
 
     endTime = get_clock();
 
-    //return the ticks spend in pause
+    // return the time spent in pause
     return (endTime - startTime);
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print end game information
+ * @retval None
+ */
 void setGameOver(char prompt[]){
 	clrscr();
-    //balloon
+    // balloon
     printPrompt(prompt, GAMEOVER_PROMPT_ROWS, GAMEOVER_PROMPT_COLUMNS, GAMEOVER_PROMPT_X, GAMEOVER_PROMPT_Y, false);
     gotoxy(11,41); printf("%03i", player.balloonsDestroyed);
     gotoxy(11,47); printf("%03i", BALLOON_POINTS);
     gotoxy(11,53); printf("%06i", player.balloonsDestroyed * BALLOON_POINTS);
-    //monster
+    // monster
     gotoxy(13,41); printf("%03i", player.monstersKilled);
     gotoxy(13,47); printf("%03i", MONSTER_POINTS);
     gotoxy(13,53); printf("%06i", player.monstersKilled * MONSTER_POINTS);
-    //arrows
+    // arrows
     gotoxy(15,41); printf("%03i", player.arrowsLeft);
     gotoxy(15,47); printf("%03i", ARROW_LEFT_POINTS);
     gotoxy(15,53); printf("%06i", player.arrowsLeft * ARROW_LEFT_POINTS);
-    //total score
+    // total score
     gotoxy(17,36); printf("%06i", player.score);
 
     fflush(stdout);
 
-    //RESET PLAYER STATUS
+    // RESET PLAYER STATUS
     player.level = 1;
     player.gameOver = false;
     player.levelOver = false;
@@ -1010,17 +1118,21 @@ void setGameOver(char prompt[]){
     player.monstersKilled = 0;
     player.arrowsLeft = 0;
 
-    memset(gameLayer, '\0', sizeof(gameLayer)); //clean gameLayer
+    memset(gameLayer, '\0', sizeof(gameLayer));
 
     char key = 0;
-    //fflush(stdin);
     do{
         key = get_char();
         msleep(10);
     } while(key != ENTER);
 
 }
+//**************************************************************************************
 
+/**
+ * @brief  Configure entities characteristics based on the level
+ * @retval None
+ */
 void setLevelPreset(){
     static int nBalloonLevel, nMonsterLevel, nBalloonScatteredLevel;
 
@@ -1030,9 +1142,9 @@ void setLevelPreset(){
         nBalloonScatteredLevel = 0;
     }
 
-    setDifficultyPreset(); //set the start status based on the difficulty
+    setDifficultyPreset(); // set the start status based on the difficulty
     for(int i=0; i <= (MAX_LEVEL-N_LEVEL_TYPES); i+=N_LEVEL_TYPES){
-        if(player.level == (i+1)){ //BALLOON LEVEL
+        if(player.level == (i+1)){ // BALLOON LEVEL
             preset.levelType = balloonLevel;
             if(nBalloonLevel == 0){
                 preset.balloonInitialX = BALLOON_ROW_INITIAL_X;
@@ -1046,7 +1158,7 @@ void setLevelPreset(){
             nBalloonLevel++;
             break;
         }
-        else if(player.level == (i+2)){ //MONSTER LEVEL
+        else if(player.level == (i+2)){ // MONSTER LEVEL
             preset.levelType = monsterLevel;
             preset.monsterStaggerDelay -= nMonsterLevel*5;
             preset.arrowHitDelay += nMonsterLevel*5;
@@ -1054,7 +1166,7 @@ void setLevelPreset(){
             nMonsterLevel++;
             break;
         }
-        else if(player.level == (i+3)){ //SCATTERED BALLOON LEVEL
+        else if(player.level == (i+3)){ // SCATTERED BALLOON LEVEL
             preset.levelType = balloonScatteredLevel;
             preset.balloonInitialX = BALLOON_LOWER_LIMIT;
             preset.balloonScatteredDelayMax -= nBalloonScatteredLevel*5;
@@ -1077,7 +1189,12 @@ void setLevelPreset(){
         } break;
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Configure entity characteristics based on the difficulty
+ * @retval None
+ */
 void setDifficultyPreset(){
 
     switch(player.difficulty){
@@ -1117,7 +1234,12 @@ void setDifficultyPreset(){
         } break;
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print debug information
+ * @retval None
+ */
 void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printTags){
 
     if(printTags){
@@ -1130,25 +1252,30 @@ void specialInterface(ARROW arrow, BALLOON balloon, MONSTER monster, bool printT
         gotoxy(2,23); printf("Monsters:");
     }
 
-    //active balloons
+    // active balloons
     printNumberInGame(balloon.activeIndex, 1, 62, "%02i");
 
-    //active arrows
+    // active arrows
     printNumberInGame(arrow.activeIndex, 3, 60, "%02i");
 
-    //active monsters
+    // active monsters
     printNumberInGame(monster.activeIndex, 2, 62, "%02i");
 
-    //arrows left
+    // arrows left
     int arrowLeft = (preset.arrowQuantity - arrow.index);
     printNumberInGame(arrowLeft, 1, 30, "%02i");
 
-    //monsters left
+    // monsters left
     int monsterLeft = (MONSTER_QUANTITY - monster.index);
     printNumberInGame(monsterLeft, 2, 32, "%02i");
 
 }
+//**************************************************************************************
 
+/**
+ * @brief  Update screen
+ * @retval None
+ */
 void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
 
     switch(preset.levelType){
@@ -1160,34 +1287,37 @@ void show(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
             player.gameOver = hitArcherDetector(&(*archer), &(*monster));
         } break;
     }
-    //update actions in game
+    // update actions in game
     update(&(*archer), &(*arrow), &(*balloon), &(*monster));
 
-    //FPS CONTROL to print screen
+    // Frames per seconds (FPS) Control
     if(time_diff(fps.startTimeDelay) >= fps.delay){
         #if DEBUG_MODE
             fps.frames++;
         #endif
-        draw(); //print game screen
-        memset(gameLayer, '\0', sizeof(gameLayer)); //clean gameLayer
+        draw(); // print game screen
+        memset(gameLayer, '\0', sizeof(gameLayer));
 
         fps.startTimeDelay = get_clock();
     }
     #if DEBUG_MODE
         if(time_diff(fps.startTimeOneSecod)  >= 1000){
-            //print fps
-
+            // print fps
             printNumberInGame(fps.frames, 3, 73, "%04i");
             fps.frames = 0;
             fps.startTimeOneSecod = get_clock();
         }
     #endif
 }
+//**************************************************************************************
 
+/**
+ * @brief  Update entities movements
+ * @retval None
+ */
 void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
-//entities movement
 
-/*************************ARROW*************************/
+    // Arrow
     if(arrow->activeIndex > 0 && !arrow->stagger){
         for(int i=0; i < arrow->index; i++){
             if(arrow->active[i] && (arrow->y[i] < ARROW_RIGHT_LIMIT ) ){
@@ -1211,7 +1341,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
         player.gameOver = true;
     }
 
-/*************************BALLOON*************************/
+    // Baloon
     if(preset.levelType == balloonLevel || preset.levelType == balloonScatteredLevel){
         if(balloon->activeIndex > 0 && !balloon->stagger){
             for(int i=0; i < BALLOON_QUANTITY; i++){
@@ -1243,7 +1373,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
         }
     }
 
-/*************************MONSTER*************************/
+    // Monster
     if(preset.levelType == monsterLevel){
         if(monster->activeIndex > 0 && !monster->stagger){
             for(int i=0; i < monster->index; i++){
@@ -1292,7 +1422,7 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
         }
     }
 
-/*************************ARCHER*************************/
+    // Archer
     if(archer->active){
         for(int i=0; i < ARCHER_ROWS; i++){
             for(int j=0; j < ARCHER_COLUMNS; j++){
@@ -1303,21 +1433,13 @@ void update(ARCHER *archer, ARROW *arrow, BALLOON *balloon, MONSTER *monster){
     }
 
 }
+//**************************************************************************************
 
-void setMonster(MONSTER *monster, int i, int startColumn, int endColumn, bool clean){
 
-    for(int m=0; m < MONSTER_ROWS; m++){
-        for (int n=startColumn; n < endColumn; n++){
-            gameLayer[monster->x[i] + m][monster->y[i] + n] = skin.monster[(m * MONSTER_COLUMNS) + n];
-        }
-    }
-    if(clean){
-        for(int j=0; j < MONSTER_ROWS; j++){
-            gameLayer[monster->x[i] + j][monster->y[i] + MONSTER_COLUMNS] = ' ';
-        }
-    }
-}
-
+/**
+ * @brief  Detect monsters collisions
+ * @retval None
+ */
 void hitMonsterDetector(ARROW *arrow, MONSTER *monster){
     if(arrow->activeIndex > 0 && monster->activeIndex >0){
         for(int i=0; i < arrow->index; i++){
@@ -1330,7 +1452,6 @@ void hitMonsterDetector(ARROW *arrow, MONSTER *monster){
                                 // X hitbox check
                                 for(int n=0; n < MONSTER_ROWS; n++){
                                     if(arrow->x[i] == monster->x[j] + n){
-                                        //getchar();
                                         if(preset.arrowConsumableArrows){
                                             arrow->active[i] = false;
                                             for(int a=0; a < ARROW_COLUMNS; a++){
@@ -1363,7 +1484,12 @@ void hitMonsterDetector(ARROW *arrow, MONSTER *monster){
         }
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Detect archer collisions
+ * @retval True if hit detected
+ */
 bool hitArcherDetector(ARCHER *archer, MONSTER *monster){
     if(monster->activeIndex > 0){
         for(int i=0; i < monster->index; i++){
@@ -1393,9 +1519,13 @@ bool hitArcherDetector(ARCHER *archer, MONSTER *monster){
     }
     return false;
 
-
 }
+//**************************************************************************************
 
+/**
+ * @brief  Detect baloons collisions
+ * @retval None
+ */
 void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
     if(arrow->activeIndex > 0 && balloon->activeIndex >0){
         for(int i=0; i < arrow->index; i++){
@@ -1438,7 +1568,12 @@ void hitBalloonDetector(ARROW *arrow, BALLOON *balloon){
         }
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Add a integer number to the game layer
+ * @retval None
+ */
 void printNumberInGame(int value, int x, int y, char format[4]){
     char buf[10] = {0};
     snprintf(buf, sizeof(buf),format, value);
@@ -1446,7 +1581,12 @@ void printNumberInGame(int value, int x, int y, char format[4]){
         if(buf[index] != '\0') gameLayer[x][y + index] = buf[index];
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Add a string to the game layer
+ * @retval None
+ */
 void printStringInGame(char *string, int x, int y){
     char buf[10] = {0};
     snprintf(buf, sizeof(buf),"%s", string);
@@ -1454,7 +1594,31 @@ void printStringInGame(char *string, int x, int y){
         if(buf[index] != '\0') gameLayer[x][y + index] = buf[index];
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Add monsters to the game layer
+ * @retval None
+ */
+void setMonster(MONSTER *monster, int i, int startColumn, int endColumn, bool clean){
+
+    for(int m=0; m < MONSTER_ROWS; m++){
+        for (int n=startColumn; n < endColumn; n++){
+            gameLayer[monster->x[i] + m][monster->y[i] + n] = skin.monster[(m * MONSTER_COLUMNS) + n];
+        }
+    }
+    if(clean){
+        for(int j=0; j < MONSTER_ROWS; j++){
+            gameLayer[monster->x[i] + j][monster->y[i] + MONSTER_COLUMNS] = ' ';
+        }
+    }
+}
+//**************************************************************************************
+
+/**
+ * @brief  Add baloons to the game layer
+ * @retval None
+ */
 void setBalloon(BALLOON *balloon, int  i, int startRow, int endRow, bool clean){
 
     for(int m=startRow; m < endRow; m++){
@@ -1467,10 +1631,13 @@ void setBalloon(BALLOON *balloon, int  i, int startRow, int endRow, bool clean){
             gameLayer[balloon->x[i] + BALLOON_ROWS][balloon->y[i] + j] = ' ';
         }
     }
-
-
 }
+//**************************************************************************************
 
+/**
+ * @brief  Print game layer to screen
+ * @retval None
+ */
 void draw(){
 
     for(int i=0; i < CANVAS_ROWS; i++){
@@ -1487,7 +1654,12 @@ void draw(){
     }
     fflush(stdout);
 }
+//**************************************************************************************
 
+/**
+ * @brief  Move archer upwards
+ * @retval None
+ */
 void archerMovUp(ARCHER *archer){
     if(time_diff(archer->startTimeKeyHitLimit) >= preset.archerHitDelay) archer->startTimeKeyHitLimit = get_clock();
     if(!archer->keyHitLimit){
@@ -1500,7 +1672,12 @@ void archerMovUp(ARCHER *archer){
         }
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Move archer downwards
+ * @retval None
+ */
 void archerMovDown(ARCHER *archer){
 
     if(time_diff(archer->startTimeKeyHitLimit) >= preset.archerHitDelay) archer->startTimeKeyHitLimit = get_clock();
@@ -1514,7 +1691,12 @@ void archerMovDown(ARCHER *archer){
         }
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Move arrows
+ * @retval None
+ */
 void arrowShoot(ARCHER archer, ARROW *arrow){
 
     if(time_diff(arrow->startTimeKeyHitLimit) >= preset.arrowHitDelay) arrow->startTimeKeyHitLimit = get_clock();
@@ -1534,9 +1716,13 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
 
         }
     }
-
 }
+//**************************************************************************************
 
+/**
+ * @brief  Read .txt files
+ * @retval True if success
+ */
 bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
     char buf[100];
 	FILE *pont_arq;
@@ -1580,7 +1766,12 @@ bool readTxtFiles(char matrixObject[], int row, int col, char txtFileName[]){
 
     return true;
 }
+//**************************************************************************************
 
+/**
+ * @brief  Keyboard pressing cooldown
+ * @retval False if in cooldown
+ */
 bool keyHitControl(uint64_t startTime, double delay){
     if(time_diff(startTime) >= delay){
         return false;
@@ -1589,7 +1780,12 @@ bool keyHitControl(uint64_t startTime, double delay){
         return true;
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Entity movement cooldown
+ * @retval False if in cooldown
+ */
 bool staggerControl(uint64_t *startTime, double delay){
 
 	if(time_diff(*startTime) >= delay){
@@ -1600,7 +1796,12 @@ bool staggerControl(uint64_t *startTime, double delay){
 		return true;
 	}
 }
+//**************************************************************************************
 
+/**
+ * @brief  Scattered balloons movement cooldown
+ * @retval None
+ */
 void staggerControlScatteredBalloon(BALLOON *balloon){
 
     for(int i=0; i < BALLOON_QUANTITY; i++){
@@ -1613,7 +1814,12 @@ void staggerControlScatteredBalloon(BALLOON *balloon){
         }
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Set baloons initial position
+ * @retval None
+ */
 void setBalloonFirstRowPosition(BALLOON *balloon){
 
     balloon->activeIndex = BALLOON_QUANTITY;
@@ -1623,7 +1829,12 @@ void setBalloonFirstRowPosition(BALLOON *balloon){
         balloon->active[i] = true;
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Set scattered baloons initial position
+ * @retval None
+ */
 void setBalloonScatteredPostition(BALLOON *balloon){
     srand(time(0));
     int max2 = preset.balloonScatteredDelayMax - preset.balloonScatteredDelayMin;
@@ -1636,7 +1847,12 @@ void setBalloonScatteredPostition(BALLOON *balloon){
         balloon->IndividualDelay[i] = preset.balloonScatteredDelayMin +  ( (rand() % max2)  + 1);
     }
 }
+//**************************************************************************************
 
+/**
+ * @brief  Set monsters initial position
+ * @retval None
+ */
 void setMonsterFirstPosition(MONSTER *monster){
 
     int max = MONSTER_LOWER_LIMIT - MONSTER_UPPER_LIMIT;
@@ -1647,7 +1863,12 @@ void setMonsterFirstPosition(MONSTER *monster){
     }
 
 }
+//**************************************************************************************
 
+/**
+ * @brief  Monster spawn cooldown
+ * @retval False if in cooldown
+ */
 bool spawnRateMonster(MONSTER *monster, double delay){
 
     if(time_diff(monster->startTimeSpawn) >= delay){
@@ -1665,3 +1886,4 @@ bool spawnRateMonster(MONSTER *monster, double delay){
     }
 
 }
+//**************************************************************************************
