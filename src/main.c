@@ -615,11 +615,11 @@ bool highscoresPrompt(){
         clrscr();
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
         gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
-        set_nonblock(0);
+        if (LINUX_EN) set_nonblock(0);
         hide_cursor(0);
         fgets(player.name, HIGHSCORES_MAX_PLAYER_NAME, stdin);
         player.name[strlen(player.name)-1] = '\0'; //take out the \n
-        set_nonblock(1);
+        if (LINUX_EN) set_nonblock(1);
         hide_cursor(1);
         return true;
     }
