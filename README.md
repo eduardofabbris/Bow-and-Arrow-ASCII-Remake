@@ -17,6 +17,12 @@ This adaptation was initially developed as my first major C project back in my f
 * Only the tip of the arrow is effective on destroying the balloons;
 * The selected difficulty level will modify the arrow fire rate speed and the archer, balloons and monsters movement speeds, enabling a more challenging or easy game.
 
+## Demo
+
+https://github.com/user-attachments/assets/4da7418a-115c-4a90-bc61-7e7e0d465880
+
+
+
 ### Levels:
 Depending on the difficulty level
 
