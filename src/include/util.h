@@ -49,6 +49,7 @@ char *get_timeinfo(time_t timestamp);
 // Terminal
 void gotoxy(int x, int y);
 void hide_cursor(int state);
+void set_nonblock(int state);
 
 char get_char();
 
@@ -121,7 +122,6 @@ char get_char();
  *********************************************/
 
 int kbhit();
-void set_nonblock(int state);
 
 #endif
 

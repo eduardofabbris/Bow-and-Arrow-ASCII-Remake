@@ -457,13 +457,12 @@ int main(void){
 
 // Initialize terminal
 #if WINDOWS_EN
-    hide_cursor(1);
     system("MODE con cols=82 lines=36");
 #else
-    set_nonblock(1);
-    hide_cursor(1);
     system("echo -ne '\e[8;36;82t'");
 #endif
+    set_nonblock(1);
+    hide_cursor(1);
 
     if(loadFiles()){
         readHighScores();
@@ -473,12 +472,11 @@ int main(void){
 // Reset terminal
 #if WINDOWS_EN
     system("MODE con cols=120 lines=30");
-    hide_cursor(0);
 #else
-    set_nonblock(0);
-    hide_cursor(0);
     system("echo -ne '\e[8;24;80t'");
 #endif
+    set_nonblock(0);
+    hide_cursor(0);
 
     clrscr();
     return 0;
@@ -615,11 +613,11 @@ bool highscoresPrompt(){
         clrscr();
         printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
         gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
-        if (LINUX_EN) set_nonblock(0);
+        set_nonblock(0);
         hide_cursor(0);
         fgets(player.name, HIGHSCORES_MAX_PLAYER_NAME, stdin);
         player.name[strlen(player.name)-1] = '\0'; //take out the \n
-        if (LINUX_EN) set_nonblock(1);
+        set_nonblock(1);
         hide_cursor(1);
         return true;
     }
