@@ -1,6 +1,7 @@
 /*******************************************************************************
 * @filename: util.c
-* @brief: Miscellaneous functions for terminal and keyboard handling for both Windows and Linux
+* @brief: Miscellaneous functions for terminal and keyboard handling for both
+*         Windows and Linux
 *
 *  Copyright 2025 eduardofabbris
 *

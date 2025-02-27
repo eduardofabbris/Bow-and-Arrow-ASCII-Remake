@@ -27,10 +27,6 @@
  * Defines
  *********************************************/
 
-// ----------- KEYS -----------
-#define SPACE 32
-#define ESC 27
-
 // ----------- DEBUG -----------
 #define DEBUG_MODE 0
 
@@ -139,8 +135,8 @@
 #define MONSTER_INITIAL_Y 80
 
 // ----------- ARROWS_LEFT_DISPLAY -----------
-#define ARROW__LEFT_DISPLAY_X 3
-#define ARROW__LEFT_DISPLAY_SYMBOL '|'
+#define ARROW_LEFT_DISPLAY_X 3
+#define ARROW_LEFT_DISPLAY_SYMBOL '|'
 
 // ----------- SCORE DISPLAY -----------
 #define SCORE_DISPLAY_X 2
@@ -930,11 +926,11 @@ void gameLoop(){
     // print arrows left
     #else
         for(int i=0; i < MAX_ARROW_QUANTITY; i++){ //erase arrows left
-            gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-MAX_ARROW_QUANTITY)+ i] = ' ';
+            gameLayer[ARROW_LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-MAX_ARROW_QUANTITY)+ i] = ' ';
         }
 
         for(int i=0; i < preset.arrowQuantity; i++){ //print arrows left
-            gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity)+ i] = ARROW__LEFT_DISPLAY_SYMBOL;
+            gameLayer[ARROW_LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity)+ i] = ARROW_LEFT_DISPLAY_SYMBOL;
         }
     #endif
 
@@ -1699,7 +1695,11 @@ void arrowShoot(ARCHER archer, ARROW *arrow){
     if(time_diff(arrow->startTimeKeyHitLimit) >= preset.arrowHitDelay) arrow->startTimeKeyHitLimit = get_clock();
     if(!arrow->keyHitLimit){
         if(arrow->index < preset.arrowQuantity){
-            if(!DEBUG_MODE) gameLayer[ARROW__LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity) + arrow->index] = ' '; //-1 from display arrows left
+             // Decrease arrows left from display
+            if(!DEBUG_MODE)
+            {
+                gameLayer[ARROW_LEFT_DISPLAY_X][((CANVAS_RIGHT_EDGE_Y-1)-preset.arrowQuantity) + arrow->index] = ' ';
+            }
 
             arrow->active[arrow->index] = true;
             arrow->activeIndex++;
