@@ -1,4 +1,4 @@
-# Bow-Arrow-ASCII-Remake
+# Bow-and-Arrow-ASCII-Remake
 
 Bow and arrow is a 1992 arcade genre game released for DOS, where the player controls a bowman and has to shoot multiple moving targets and avoid obstacles with a limited number of arrows.
 
