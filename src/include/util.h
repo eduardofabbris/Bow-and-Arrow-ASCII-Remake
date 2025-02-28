@@ -52,6 +52,7 @@ void hide_cursor(int state);
 void set_nonblock(int state);
 
 char get_char();
+int get_keyboard_str(char *input_layer, char *str_buffer, int max_str_len);
 
 #ifdef _WIN32
 // @windows

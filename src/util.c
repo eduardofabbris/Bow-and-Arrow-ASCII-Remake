@@ -55,6 +55,73 @@ char *get_timeinfo(time_t timestamp)
 }
 //**************************************************************************************
 
+/**
+ * @brief  Get user string input from keyboard
+ * @param  input_layer: screen layer to print over the background
+ * @param  str_buffer: buffer to store the input string
+ * @param  max_str_len: maximum input string length
+ * @retval string length when input confirmed, -1 when input canceled and -2 otherwise
+ */
+int get_keyboard_str(char *input_layer, char *str_buffer, int max_str_len)
+{
+    static int str_len = 0, blink_latch = 0;
+    static uint64_t blink_timer = 0;
+
+    int ch = 0;
+    if(kbhit()){
+        // Read a key form keyboard
+        ch = get_char();
+
+        switch(ch)
+        {
+            // Cancel input
+            case ESC:
+                str_len = 0;
+                return -1;
+
+            // Finished typing
+            case ENTER:
+                int aux = str_len;
+                str_len = 0;
+                return aux;
+
+            // Erase character
+            case BACKSPACE:
+                if (str_len > 0)
+                    str_len -= 1;
+
+                break;
+            // Add new character
+            default:
+                if (str_len < max_str_len)
+                {
+                    if (str_buffer != NULL)
+                    {
+                        str_buffer[str_len] = ch;
+                    }
+                    str_len += 1;
+                }
+                break;
+        }
+    }
+
+    if (input_layer != NULL && str_buffer != NULL)
+    {
+        memcpy(input_layer, str_buffer, str_len);
+        if ( time_diff(blink_timer) >= 500 )
+        {
+            blink_timer = get_clock();
+            blink_latch = !blink_latch;
+        }
+        if (blink_latch)
+        {
+            memcpy(input_layer + str_len, "_", 1);
+        }
+    }
+    return -2;
+}
+//****************************************************************************************
+
 #ifdef _WIN32 // @windows
 
 /**

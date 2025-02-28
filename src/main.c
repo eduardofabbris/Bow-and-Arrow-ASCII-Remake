@@ -173,7 +173,7 @@
 #define HIGHSCORES_MENU_FILE "backgrounds" FILE_SEPARATOR "highscores_menu"
 
 // ----------- HIGHSCORES SAVE FILE -----------
-#define HIGHSCORES_MAX_PLAYER_NAME 40
+#define HIGHSCORES_MAX_PLAYER_NAME 18
 #define HIGHSCORES_MAX_SAVED_SCORES 5
 #define HIGHSCORES_FILE "highscores"
 
@@ -596,7 +596,11 @@ void highscoresMenu(){
  * @retval True if player entered the high scores
  */
 bool highscoresPrompt(){
+    char input_layer[100] = {0};
+    char name_str[100] = {0};
+    int  name_len = -1;
     bool print = false;
+
     if(highScore.index < HIGHSCORES_MAX_SAVED_SCORES) highScore.index++;
 
     for(int i=0; i < highScore.index; i++){
@@ -606,15 +610,25 @@ bool highscoresPrompt(){
     }
 
     if(print){
-        clrscr();
-        printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
-        gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y +16) );
-        set_nonblock(0);
-        hide_cursor(0);
-        fgets(player.name, HIGHSCORES_MAX_PLAYER_NAME, stdin);
-        player.name[strlen(player.name)-1] = '\0'; //take out the \n
-        set_nonblock(1);
-        hide_cursor(1);
+        // Get player name
+        while( name_len < 0 )
+        {
+            clrscr();
+            printPrompt(prompt.highScoresPrompt, HIGH_SCORES_PROMPT_ROWS, HIGH_SCORES_PROMPT_COLUMNS, HIGH_SCORES_PROMPT_X, HIGH_SCORES_PROMPT_Y, false);
+
+            memset(input_layer, '\0', 100);
+            name_len = get_keyboard_str(input_layer, name_str, HIGHSCORES_MAX_PLAYER_NAME);
+
+            gotoxy((HIGH_SCORES_PROMPT_X + 4), (HIGH_SCORES_PROMPT_Y + 16));
+            printf("%s", input_layer);
+            fflush(stdout);
+
+            msleep(10);
+        }
+        memset(player.name, '\0', sizeof(player.name));
+        memcpy(player.name, name_str, name_len);
+
+
         return true;
     }
     return false;
