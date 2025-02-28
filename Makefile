@@ -1,4 +1,3 @@
-# TODO: verify if windows or linux
 # C compiler
 CC = gcc
 

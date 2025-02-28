@@ -24,7 +24,7 @@ Using MinGW, execute "windows\_build.bat"
 * Use the arrow keys or w/s to move the archer upwards and downwards;
 * Fire the available arrows(displayed in the game above) using space;
 * Avoid collisions with monsters and spending all the available arrows, which will end the game;
-* Destroy the most balloons and monsters as possible using the least amount of arrows to obtain greater scores;
+* Destroy as many balloons and monsters as possible using the fewest arrows to achieve higher scores;
 * Only the tip of the arrow is effective on destroying the balloons;
 * The selected difficulty level will modify the arrow fire rate speed and the archer, balloons and monsters movement speeds, enabling a more challenging or easier game.
 
