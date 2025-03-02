@@ -10,12 +10,11 @@ H_FILES = $(wildcard $(LIB_DIR)/*.h)
 
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(SRC_DIR)/%.o, $(C_FILES))
 
-C_FLAGS = -Wall -Wextra -lncurses
+C_FLAGS = -Wall -Wextra
 
 .PHONY: all main clean
 
-
-all: main clean
+all: main
 
 main: $(OBJ_FILES) 
 	$(CC) -o $@ $(OBJ_FILES) $(C_FLAGS) -I$(LIB_DIR)
@@ -24,4 +23,4 @@ $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c -o $@ $< $(C_FLAGS) -I$(LIB_DIR)    
 
 clean:
-	rm -f src/*.o
+	rm -f src/*.o main
